@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GRE-CorpVault — Controle de Senhas Corporativas</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0b0f; --surface: #12141a; --surface2: #1a1d26; --border: #252836;
+    --accent: #6c63ff; --text: #e8eaf0; --text-muted: #6b7280; --text-dim: #9ca3af;
+    --green: #43e97b; --yellow: #f9c74f; --red: #ef4444;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'DM Mono',monospace; background:var(--bg); color:var(--text); min-height:100vh; }
+
+  /* ── LOGIN ── */
+  #loginScreen {
+    display:none; position:fixed; inset:0; background:var(--bg);
+    align-items:center; justify-content:center; z-index:999;
+  }
+  #loginScreen.visible { display:flex; }
+  .login-box {
+    background:var(--surface); border:1px solid var(--border); border-radius:16px;
+    padding:40px 36px; width:380px; max-width:95vw;
+  }
+  .login-logo { display:flex; align-items:center; gap:12px; margin-bottom:28px; }
+  .login-logo .logo-icon { width:44px; height:44px; background:var(--accent); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:22px; }
+  .login-logo .logo-text { font-family:'Syne',sans-serif; font-weight:800; font-size:22px; }
+  .login-logo .logo-text span { color:var(--accent); }
+  .login-sub { font-size:10px; color:var(--text-muted); letter-spacing:2px; text-transform:uppercase; }
+  .login-title { font-family:'Syne',sans-serif; font-size:15px; color:var(--text-dim); margin-bottom:22px; }
+  .login-err { background:rgba(239,68,68,.12); border:1px solid rgba(239,68,68,.3); color:var(--red); border-radius:6px; padding:8px 12px; font-size:11px; margin-bottom:14px; display:none; }
+  .login-err.show { display:block; }
+  .lfg { margin-bottom:14px; }
+  .lfg label { display:block; font-size:10px; color:var(--text-muted); text-transform:uppercase; letter-spacing:1.5px; margin-bottom:6px; }
+  .lfg input { width:100%; background:var(--surface2); border:1px solid var(--border); border-radius:6px; padding:10px 12px; font-size:13px; color:var(--text); font-family:'DM Mono',monospace; outline:none; transition:border-color .2s; }
+  .lfg input:focus { border-color:var(--accent); }
+  .btn-login { width:100%; padding:11px; background:var(--accent); color:#fff; border:none; border-radius:8px; font-family:'DM Mono',monospace; font-size:13px; font-weight:500; cursor:pointer; margin-top:6px; transition:background .2s; }
+  .btn-login:hover { background:#5a52e0; }
+  .btn-login:disabled { opacity:.5; cursor:default; }
+
+  /* ── APP ── */
+  #app { display:none; }
+  #app.visible { display:block; }
+
+  .header { background:var(--surface); border-bottom:1px solid var(--border); padding:14px 28px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:100; }
+  .logo-wrap { display:flex; align-items:center; gap:12px; }
+  .logo-icon { width:36px; height:36px; background:var(--accent); border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:18px; }
+  .logo-text { font-family:'Syne',sans-serif; font-weight:800; font-size:20px; }
+  .logo-text span { color:var(--accent); }
+  .logo-sub { font-size:10px; color:var(--text-muted); letter-spacing:2px; text-transform:uppercase; }
+  .header-right { display:flex; gap:10px; align-items:center; }
+  .user-chip { font-size:11px; color:var(--text-muted); background:var(--surface2); border:1px solid var(--border); border-radius:20px; padding:5px 12px; display:flex; align-items:center; gap:6px; }
+  .user-chip .dot { width:7px; height:7px; border-radius:50%; background:var(--green); }
+  .search-box { display:flex; align-items:center; gap:8px; background:var(--surface2); border:1px solid var(--border); border-radius:8px; padding:8px 14px; }
+  .search-box input { background:none; border:none; outline:none; color:var(--text); font-family:'DM Mono',monospace; font-size:12px; width:190px; }
+  .search-box input::placeholder { color:var(--text-muted); }
+  .btn { padding:8px 16px; border-radius:6px; border:none; cursor:pointer; font-family:'DM Mono',monospace; font-size:12px; transition:all .2s; }
+  .btn-primary { background:var(--accent); color:#fff; }
+  .btn-primary:hover { background:#5a52e0; transform:translateY(-1px); }
+  .btn-ghost { background:transparent; color:var(--text-dim); border:1px solid var(--border); }
+  .btn-ghost:hover { border-color:var(--accent); color:var(--accent); }
+  .btn-danger { background:transparent; color:var(--red); border:1px solid var(--red); font-size:11px; padding:5px 10px; }
+  .btn-danger:hover { background:var(--red); color:#fff; }
+  .btn-save { background:var(--green); color:#0a0b0f; font-size:11px; padding:5px 10px; }
+  .btn-logout { background:transparent; color:var(--text-muted); border:1px solid var(--border); font-size:11px; padding:6px 12px; }
+  .btn-logout:hover { border-color:var(--red); color:var(--red); }
+  .btn-sm { font-size:11px; padding:5px 10px; }
+
+  .container { display:flex; min-height:calc(100vh - 65px); }
+  .sidebar { width:228px; background:var(--surface); border-right:1px solid var(--border); padding:20px 0; flex-shrink:0; position:sticky; top:65px; height:calc(100vh - 65px); overflow-y:auto; }
+  .sidebar-section { padding:8px 16px 4px; font-size:10px; color:var(--text-muted); text-transform:uppercase; letter-spacing:2px; }
+  .sidebar-item { display:flex; align-items:center; gap:10px; padding:10px 16px; cursor:pointer; transition:all .15s; border-left:3px solid transparent; font-size:11px; color:var(--text-dim); }
+  .sidebar-item:hover { background:var(--surface2); color:var(--text); }
+  .sidebar-item.active { border-left-color:var(--accent); background:var(--surface2); color:var(--text); }
+  .sidebar-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+  .sidebar-count { margin-left:auto; font-size:10px; background:var(--surface2); padding:2px 6px; border-radius:10px; color:var(--text-muted); }
+  .sidebar-item.active .sidebar-count { background:var(--accent); color:#fff; }
+  .sidebar-admin { padding:12px 16px; margin-top:8px; border-top:1px solid var(--border); }
+  .sidebar-admin-btn { width:100%; padding:7px; background:var(--surface2); border:1px solid var(--border); border-radius:6px; color:var(--text-muted); font-family:'DM Mono',monospace; font-size:10px; cursor:pointer; text-align:left; transition:all .15s; }
+  .sidebar-admin-btn:hover { border-color:var(--accent); color:var(--accent); }
+
+  .main { flex:1; padding:24px 28px; overflow-x:hidden; }
+  .team-header { display:flex; align-items:center; gap:12px; margin-bottom:18px; }
+  .team-badge { width:12px; height:12px; border-radius:50%; flex-shrink:0; }
+  .team-name { font-family:'Syne',sans-serif; font-size:21px; font-weight:700; }
+  .team-count-chip { font-size:11px; color:var(--text-muted); background:var(--surface2); padding:3px 10px; border-radius:20px; }
+
+  .stats-bar { display:flex; gap:12px; margin-bottom:20px; flex-wrap:wrap; }
+  .stat-chip { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:10px 16px; }
+  .stat-num { font-family:'Syne',sans-serif; font-size:20px; font-weight:700; }
+  .stat-label { color:var(--text-muted); font-size:10px; text-transform:uppercase; letter-spacing:1px; }
+
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(340px,1fr)); gap:14px; }
+
+  .emp-card { background:var(--surface); border:1px solid var(--border); border-radius:12px; overflow:hidden; transition:border-color .2s,transform .2s; }
+  .emp-card:hover { border-color:var(--accent); transform:translateY(-2px); }
+  .card-head { padding:12px 14px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--border); }
+  .emp-info { display:flex; align-items:center; gap:10px; }
+  .avatar { width:36px; height:36px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-family:'Syne',sans-serif; font-weight:700; font-size:12px; color:#fff; flex-shrink:0; }
+  .emp-name { font-family:'Syne',sans-serif; font-weight:600; font-size:12px; line-height:1.3; }
+  .emp-tag { font-size:9px; color:var(--text-muted); text-transform:uppercase; letter-spacing:1px; margin-top:2px; }
+  .has-extra { font-size:9px; background:rgba(249,199,79,.15); color:var(--yellow); border:1px solid rgba(249,199,79,.3); border-radius:4px; padding:1px 5px; margin-left:4px; }
+
+  .card-body { padding:12px 14px; }
+  .frow { display:flex; align-items:center; gap:8px; margin-bottom:8px; }
+  .frow:last-child { margin-bottom:0; }
+  .flbl { font-size:10px; color:var(--text-muted); text-transform:uppercase; letter-spacing:1px; white-space:nowrap; min-width:72px; }
+  .flbl.ylw { color:var(--yellow); font-size:9px; }
+  .fwrap { flex:1; display:flex; align-items:center; gap:6px; }
+  .fdisp { flex:1; background:var(--surface2); border:1px solid var(--border); border-radius:5px; padding:5px 9px; font-size:11px; color:var(--text); font-family:'DM Mono',monospace; min-height:28px; display:flex; align-items:center; word-break:break-all; }
+  .fdisp.empty { color:var(--text-muted); font-style:italic; font-size:10px; }
+  .fdisp.masked { letter-spacing:3px; font-size:12px; }
+  .finput { flex:1; background:var(--surface2); border:1px solid var(--accent); border-radius:5px; padding:5px 9px; font-size:11px; color:var(--text); font-family:'DM Mono',monospace; outline:none; min-height:28px; }
+  .frow.xtra { background:var(--surface2); border-radius:6px; padding:5px 8px; margin-top:3px; }
+
+  .icon-btn { background:none; border:none; cursor:pointer; font-size:13px; padding:3px 5px; border-radius:4px; transition:background .15s; color:var(--text-muted); }
+  .icon-btn:hover { background:var(--surface2); color:var(--text); }
+  .card-foot { padding:8px 14px; border-top:1px solid var(--border); display:flex; gap:8px; justify-content:flex-end; }
+
+  .add-card { background:var(--surface); border:2px dashed var(--border); border-radius:12px; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:28px; cursor:pointer; transition:all .2s; min-height:140px; gap:8px; color:var(--text-muted); font-size:12px; }
+  .add-card:hover { border-color:var(--accent); color:var(--accent); }
+  .add-card .plus { font-size:26px; }
+
+  .empty-state { grid-column:1/-1; text-align:center; padding:60px 20px; color:var(--text-muted); }
+  .empty-state .emoji { font-size:48px; margin-bottom:16px; }
+  .empty-state h3 { font-family:'Syne',sans-serif; font-size:18px; color:var(--text-dim); margin-bottom:8px; }
+
+  /* Loading overlay */
+  .loading-overlay { position:fixed; inset:0; background:rgba(10,11,15,.8); z-index:500; display:none; align-items:center; justify-content:center; flex-direction:column; gap:12px; }
+  .loading-overlay.show { display:flex; }
+  .spinner { width:36px; height:36px; border:3px solid var(--border); border-top-color:var(--accent); border-radius:50%; animation:spin .7s linear infinite; }
+  @keyframes spin { to { transform:rotate(360deg); } }
+
+  /* Modals */
+  .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.75); z-index:200; display:none; align-items:center; justify-content:center; }
+  .modal-overlay.open { display:flex; }
+  .modal { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:26px; width:460px; max-width:95vw; max-height:90vh; overflow-y:auto; }
+  .modal h3 { font-family:'Syne',sans-serif; font-size:17px; margin-bottom:16px; }
+  .fg { margin-bottom:11px; }
+  .fg label { display:block; font-size:10px; color:var(--text-muted); text-transform:uppercase; letter-spacing:1.5px; margin-bottom:5px; }
+  .fg input,.fg select { width:100%; background:var(--surface2); border:1px solid var(--border); border-radius:6px; padding:8px 11px; font-size:12px; color:var(--text); font-family:'DM Mono',monospace; outline:none; }
+  .fg input:focus,.fg select:focus { border-color:var(--accent); }
+  .fg select option { background:var(--surface2); }
+  .fsec { font-size:10px; color:var(--yellow); text-transform:uppercase; letter-spacing:2px; margin:14px 0 8px; padding-bottom:4px; border-bottom:1px solid var(--border); }
+  .modal-actions { display:flex; gap:10px; justify-content:flex-end; margin-top:16px; }
+  .modal-err { background:rgba(239,68,68,.12); border:1px solid rgba(239,68,68,.3); color:var(--red); border-radius:6px; padding:8px 12px; font-size:11px; margin-bottom:12px; display:none; }
+  .modal-err.show { display:block; }
+
+  /* Admin panel */
+  .admin-table { width:100%; border-collapse:collapse; font-size:11px; margin-top:12px; }
+  .admin-table th { text-align:left; padding:6px 10px; color:var(--text-muted); font-size:10px; text-transform:uppercase; letter-spacing:1px; border-bottom:1px solid var(--border); }
+  .admin-table td { padding:8px 10px; border-bottom:1px solid var(--border); }
+  .role-badge { font-size:9px; padding:2px 7px; border-radius:10px; }
+  .role-admin { background:rgba(108,99,255,.2); color:var(--accent); border:1px solid rgba(108,99,255,.3); }
+  .role-user { background:rgba(156,163,175,.1); color:var(--text-muted); border:1px solid var(--border); }
+
+  /* Toast */
+  .toast { position:fixed; bottom:24px; right:24px; background:var(--surface); border:1px solid var(--green); border-radius:8px; padding:11px 18px; font-size:13px; color:var(--green); z-index:300; transform:translateY(80px); opacity:0; transition:all .3s; }
+  .toast.err { border-color:var(--red); color:var(--red); }
+  .toast.show { transform:translateY(0); opacity:1; }
+
+  ::-webkit-scrollbar { width:5px; height:5px; }
+  ::-webkit-scrollbar-track { background:var(--bg); }
+  ::-webkit-scrollbar-thumb { background:var(--border); border-radius:3px; }
+</style>
+</head>
+<body>
+
+<!-- ── LOADING ── -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="spinner"></div>
+  <span style="font-size:12px;color:var(--text-muted)">Carregando...</span>
+</div>
+
+<!-- ── LOGIN ── -->
+<div id="loginScreen">
+  <div class="login-box">
+    <div class="login-logo">
+      <div class="logo-icon">🔐</div>
+      <div>
+        <div class="logo-text">GRE-Corp<span>Vault</span></div>
+        <div class="login-sub">Controle de Senhas Corporativas</div>
+      </div>
+    </div>
+    <div class="login-title">Faça login para continuar</div>
+    <div class="login-err" id="loginErr"></div>
+    <div class="lfg"><label>Usuário</label><input type="text" id="loginUser" placeholder="seu usuário" autocomplete="username"></div>
+    <div class="lfg"><label>Senha</label><input type="password" id="loginPass" placeholder="••••••••" autocomplete="current-password"></div>
+    <button class="btn-login" id="btnLogin" onclick="doLogin()">Entrar</button>
+  </div>
+</div>
+
+<!-- ── APP ── -->
+<div id="app">
+  <div class="header">
+    <div class="logo-wrap">
+      <div class="logo-icon">🔐</div>
+      <div>
+        <div class="logo-text">GRE-Corp<span>Vault</span></div>
+        <div class="logo-sub">Controle de Senhas Corporativas</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="search-box">
+        <span>🔍</span>
+        <input type="text" id="globalSearch" placeholder="Buscar colaborador..." oninput="renderMain()">
+      </div>
+      <div class="user-chip"><div class="dot"></div><span id="userLabel">—</span></div>
+      <button class="btn btn-logout" onclick="doLogout()">Sair</button>
+      <button class="btn btn-primary" onclick="openAddModal()">+ Colaborador</button>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="sidebar" id="sidebar"></div>
+    <div class="main" id="main"></div>
+  </div>
+</div>
+
+<!-- ── MODAL ADICIONAR / EDITAR ── -->
+<div class="modal-overlay" id="addModal">
+  <div class="modal">
+    <h3 id="modalTitle">➕ Novo Colaborador</h3>
+    <div class="modal-err" id="modalErr"></div>
+    <div class="fg"><label>Nome Completo</label><input type="text" id="mName" placeholder="Nome completo"></div>
+    <div class="fg"><label>Time</label>
+      <select id="mTeam">
+        <option value="posvenda">POS-VENDA</option>
+        <option value="cobranca">COBRANÇA</option>
+        <option value="sdr">SDR</option>
+        <option value="poscontemp">POS-CONTEMPLAÇÃO</option>
+        <option value="backoffice">BACKOFFICE</option>
+        <option value="intelcomer">INTELIGÊNCIA COMERCIAL</option>
+      </select>
+    </div>
+    <div class="fsec">🔐 Senhas</div>
+    <div class="fg"><label>Senha Notebook</label><input type="text" id="mNb"></div>
+    <div class="fg"><label>Celular / Ramal</label><input type="text" id="mCel"></div>
+    <div class="fg"><label>PIN / Validação</label><input type="text" id="mPin"></div>
+    <div class="fsec">➕ Informações Extras</div>
+    <div class="fg"><label>Microsoft / E-mail</label><input type="text" id="mMs"></div>
+    <div class="fg"><label>Wi-Fi / Validação</label><input type="text" id="mWifi"></div>
+    <div class="fg"><label>Observações</label><input type="text" id="mObs"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal()">Cancelar</button>
+      <button class="btn btn-primary" id="modalSaveBtn" onclick="saveModal()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── MODAL TROCAR SENHA ── -->
+<div class="modal-overlay" id="pwModal">
+  <div class="modal">
+    <h3>🔑 Trocar Minha Senha</h3>
+    <div class="modal-err" id="pwErr"></div>
+    <div class="fg"><label>Senha Atual</label><input type="password" id="pwCurrent"></div>
+    <div class="fg"><label>Nova Senha</label><input type="password" id="pwNew"></div>
+    <div class="fg"><label>Confirmar Nova Senha</label><input type="password" id="pwConfirm"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closePwModal()">Cancelar</button>
+      <button class="btn btn-primary" onclick="changePassword()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── MODAL ADMIN USUÁRIOS ── -->
+<div class="modal-overlay" id="adminModal">
+  <div class="modal" style="width:560px">
+    <h3>👥 Gerenciar Usuários</h3>
+    <div class="modal-err" id="adminErr"></div>
+    <div id="adminUserList"></div>
+    <div class="fsec" style="margin-top:20px">Novo Usuário</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div class="fg"><label>Login</label><input type="text" id="newUserLogin"></div>
+      <div class="fg"><label>Senha</label><input type="password" id="newUserPass"></div>
+    </div>
+    <div class="fg"><label>Perfil</label>
+      <select id="newUserRole">
+        <option value="user">Usuário</option>
+        <option value="admin">Admin</option>
+      </select>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeAdminModal()">Fechar</button>
+      <button class="btn btn-primary" onclick="createUser()">Criar Usuário</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ─── CONFIG ───────────────────────────────────────────────────────────────────
+const TEAMS = {
+  posvenda:   { label:'POS-VENDA',              color:'#f472b6', icon:'💼' },
+  cobranca:   { label:'COBRANÇA',               color:'#fb923c', icon:'📋' },
+  sdr:        { label:'SDR',                    color:'#34d399', icon:'📞' },
+  poscontemp: { label:'POS-CONTEMPLAÇÃO',        color:'#60a5fa', icon:'🏆' },
+  backoffice: { label:'BACKOFFICE',             color:'#a78bfa', icon:'🗂️' },
+  intelcomer: { label:'INTELIGÊNCIA COMERCIAL', color:'#f59e0b', icon:'📊' },
+};
+
+let emps = [], cur = 'intelcomer', editing = new Set(), shown = {};
+let currentUser = null, editingId = null;
+
+// ─── UTILITÁRIOS ──────────────────────────────────────────────────────────────
+function initials(n){ return n.replace(/\s*\(.*?\)\s*/g,'').trim().split(' ').slice(0,2).map(x=>x[0]||'').join('').toUpperCase(); }
+
+function showLoading(v){ document.getElementById('loadingOverlay').classList.toggle('show',v); }
+
+function toast(msg, err=false){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast' + (err?' err':'');
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2500);
+}
+
+// ─── API HELPER ───────────────────────────────────────────────────────────────
+async function api(method, path, body){
+  const opts = { method, credentials:'include', headers:{ 'Content-Type':'application/json' } };
+  if(body) opts.body = JSON.stringify(body);
+  const res = await fetch(path, opts);
+  const data = await res.json().catch(()=>({}));
+  if(!res.ok) throw new Error(data.error || 'Erro desconhecido');
+  return data;
+}
+
+// ─── AUTH ─────────────────────────────────────────────────────────────────────
+async function checkAuth(){
+  try {
+    const me = await api('GET', '/api/auth/me');
+    if(me.authenticated){
+      currentUser = me;
+      showApp();
+    } else {
+      showLogin();
+    }
+  } catch { showLogin(); }
+}
+
+function showLogin(){
+  document.getElementById('loginScreen').classList.add('visible');
+  document.getElementById('app').classList.remove('visible');
+  document.getElementById('loginUser').value = '';
+  document.getElementById('loginPass').value = '';
+  document.getElementById('loginErr').classList.remove('show');
+}
+
+function showApp(){
+  document.getElementById('loginScreen').classList.remove('visible');
+  document.getElementById('app').classList.add('visible');
+  document.getElementById('userLabel').textContent = currentUser.username + (currentUser.role==='admin'?' 👑':'');
+  loadEmps();
+}
+
+async function doLogin(){
+  const username = document.getElementById('loginUser').value.trim();
+  const password = document.getElementById('loginPass').value;
+  const errEl = document.getElementById('loginErr');
+  const btn = document.getElementById('btnLogin');
+
+  errEl.classList.remove('show');
+  btn.disabled = true; btn.textContent = 'Entrando...';
+
+  try {
+    const res = await api('POST', '/api/auth/login', { username, password });
+    currentUser = res;
+    showApp();
+  } catch(e) {
+    errEl.textContent = e.message;
+    errEl.classList.add('show');
+  } finally {
+    btn.disabled = false; btn.textContent = 'Entrar';
+  }
+}
+
+// Enter no login
+document.addEventListener('keydown', e => {
+  if(e.key==='Enter' && document.getElementById('loginScreen').classList.contains('visible')) doLogin();
+});
+
+async function doLogout(){
+  await api('POST', '/api/auth/logout').catch(()=>{});
+  currentUser = null;
+  emps = [];
+  showLogin();
+}
+
+// ─── CARREGAR DADOS ───────────────────────────────────────────────────────────
+async function loadEmps(){
+  showLoading(true);
+  try {
+    emps = await api('GET', '/api/employees');
+    render();
+  } catch(e) {
+    toast('Erro ao carregar dados: ' + e.message, true);
+  } finally {
+    showLoading(false);
+  }
+}
+
+// ─── RENDER ───────────────────────────────────────────────────────────────────
+function sidebar(){
+  let h = '<div class="sidebar-section">Times</div>';
+  for(const [k,t] of Object.entries(TEAMS)){
+    const c = emps.filter(e=>e.team===k).length;
+    h += `<div class="sidebar-item${k===cur?' active':''}" onclick="go('${k}')">
+      <div class="sidebar-dot" style="background:${t.color}"></div>
+      <span>${t.label}</span><span class="sidebar-count">${c}</span></div>`;
+  }
+  // Botões extra na sidebar
+  h += `<div class="sidebar-admin">
+    <button class="sidebar-admin-btn" onclick="openPwModal()">🔑 Trocar minha senha</button>`;
+  if(currentUser?.role === 'admin')
+    h += `<button class="sidebar-admin-btn" style="margin-top:6px" onclick="openAdminModal()">👥 Gerenciar usuários</button>`;
+  h += `</div>`;
+  document.getElementById('sidebar').innerHTML = h;
+}
+
+function renderMain(){
+  const team = TEAMS[cur];
+  const te = emps.filter(e=>e.team===cur);
+  const q = (document.getElementById('globalSearch')?.value||'').toLowerCase();
+  const fe = te.filter(e=>e.name.toLowerCase().includes(q));
+
+  const wNb=te.filter(e=>e.nb).length, wCel=te.filter(e=>e.cel).length, wPin=te.filter(e=>e.pin).length;
+
+  let cards = fe.map(cardHtml).join('');
+  let empty = '';
+  if(!fe.length) empty=`<div class="empty-state"><div class="emoji">${cur==='sdr'&&!te.length?'📞':'🔍'}</div>
+    <h3>${cur==='sdr'&&!te.length?'SDR sem colaboradores':'Nenhum resultado'}</h3>
+    <p>${cur==='sdr'&&!te.length?'Adicione o primeiro membro.':'Tente outro termo de busca.'}</p></div>`;
+
+  document.getElementById('main').innerHTML=`
+    <div class="team-header">
+      <div class="team-badge" style="background:${team.color}"></div>
+      <div class="team-name">${team.icon} ${team.label}</div>
+      <div class="team-count-chip">${te.length} colaboradores</div>
+    </div>
+    <div class="stats-bar">
+      <div class="stat-chip"><div class="stat-num">${te.length}</div><div class="stat-label">Total</div></div>
+      <div class="stat-chip"><div class="stat-num" style="color:var(--accent)">${wNb}</div><div class="stat-label">Notebook</div></div>
+      <div class="stat-chip"><div class="stat-num" style="color:var(--green)">${wCel}</div><div class="stat-label">Celular</div></div>
+      <div class="stat-chip"><div class="stat-num" style="color:var(--yellow)">${wPin}</div><div class="stat-label">PIN</div></div>
+    </div>
+    <div class="grid">${cards}${empty}
+      <div class="add-card" onclick="openAddModal()"><span class="plus">+</span><span>Adicionar colaborador</span></div>
+    </div>`;
+}
+
+function cardHtml(e){
+  const t = TEAMS[e.team], ed = editing.has(e.id), sh = shown[e.id];
+  const hasX = e.ms||e.wifi||e.obs;
+  function fv(v, mask=true){
+    if(!v) return `<div class="fdisp empty">—</div>`;
+    if(mask&&!sh) return `<div class="fdisp masked">••••••••</div>`;
+    return `<div class="fdisp">${escHtml(v)}</div>`;
+  }
+  function fi(id,v,ph=''){return `<input class="finput" id="${id}" type="text" value="${escHtml(v)}" placeholder="${ph}">`;}
+  return `<div class="emp-card">
+    <div class="card-head">
+      <div class="emp-info">
+        <div class="avatar" style="background:${t.color}20;color:${t.color};border:1px solid ${t.color}40">${initials(e.name)}</div>
+        <div>
+          <div class="emp-name">${escHtml(e.name)}${hasX?`<span class="has-extra">+info</span>`:''}</div>
+          <div class="emp-tag">${t.icon} ${t.label}</div>
+        </div>
+      </div>
+      <button class="icon-btn" onclick="toggleShow(${e.id})">${sh?'🙈':'👁️'}</button>
+    </div>
+    <div class="card-body">
+      ${ed?`
+        <div class="frow"><div class="flbl">💻 Notebook</div><div class="fwrap">${fi('nb-'+e.id,e.nb)}</div></div>
+        <div class="frow"><div class="flbl">📱 Celular</div><div class="fwrap">${fi('cel-'+e.id,e.cel)}</div></div>
+        <div class="frow"><div class="flbl">🔢 PIN</div><div class="fwrap">${fi('pin-'+e.id,e.pin)}</div></div>
+        <div class="frow"><div class="flbl ylw">📧 Microsoft</div><div class="fwrap">${fi('ms-'+e.id,e.ms)}</div></div>
+        <div class="frow"><div class="flbl ylw">📶 Wi-Fi</div><div class="fwrap">${fi('wf-'+e.id,e.wifi)}</div></div>
+        <div class="frow"><div class="flbl ylw">📝 Obs</div><div class="fwrap">${fi('obs-'+e.id,e.obs)}</div></div>
+      `:`
+        <div class="frow"><div class="flbl">💻 Notebook</div><div class="fwrap">${fv(e.nb)}</div></div>
+        <div class="frow"><div class="flbl">📱 Celular</div><div class="fwrap">${fv(e.cel,false)}</div></div>
+        <div class="frow"><div class="flbl">🔢 PIN</div><div class="fwrap">${fv(e.pin)}</div></div>
+        ${hasX?`
+          ${e.ms?`<div class="frow xtra"><div class="flbl ylw">📧 Microsoft</div><div class="fwrap">${fv(e.ms,false)}</div></div>`:''}
+          ${e.wifi?`<div class="frow xtra"><div class="flbl ylw">📶 Wi-Fi</div><div class="fwrap">${fv(e.wifi,false)}</div></div>`:''}
+          ${e.obs?`<div class="frow xtra"><div class="flbl ylw">📝 Obs</div><div class="fwrap">${fv(e.obs,false)}</div></div>`:''}
+        `:''}
+      `}
+    </div>
+    <div class="card-foot">
+      ${ed?`
+        <button class="btn btn-ghost btn-sm" onclick="cancelEdit(${e.id})">Cancelar</button>
+        <button class="btn btn-save btn-sm" onclick="saveCard(${e.id})">💾 Salvar</button>
+      `:`
+        <button class="btn btn-danger btn-sm" onclick="delEmp(${e.id})">🗑️</button>
+        <button class="btn btn-ghost btn-sm" onclick="openEditModal(${e.id})">✏️ Editar</button>
+      `}
+    </div>
+  </div>`;
+}
+
+function escHtml(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+// ─── AÇÕES ────────────────────────────────────────────────────────────────────
+function go(k){ cur=k; editing.clear(); render(); }
+function render(){ sidebar(); renderMain(); }
+function toggleShow(id){ shown[id]=!shown[id]; renderMain(); }
+function cancelEdit(id){ editing.delete(id); renderMain(); }
+
+async function saveCard(id){
+  const e = emps.find(x=>x.id===id); if(!e) return;
+  const payload = {
+    name: e.name, team: e.team,
+    nb:  document.getElementById('nb-'+id)?.value||'',
+    cel: document.getElementById('cel-'+id)?.value||'',
+    pin: document.getElementById('pin-'+id)?.value||'',
+    ms:  document.getElementById('ms-'+id)?.value||'',
+    wifi:document.getElementById('wf-'+id)?.value||'',
+    obs: document.getElementById('obs-'+id)?.value||'',
+  };
+  showLoading(true);
+  try {
+    const updated = await api('PUT', `/api/employees/${id}`, payload);
+    const idx = emps.findIndex(x=>x.id===id);
+    emps[idx] = updated;
+    editing.delete(id);
+    render();
+    toast('✅ Salvo!');
+  } catch(e){ toast('Erro: '+e.message, true); }
+  finally { showLoading(false); }
+}
+
+async function delEmp(id){
+  const e = emps.find(x=>x.id===id);
+  if(!confirm(`Remover "${e?.name}"?\n\nEsta ação não pode ser desfeita.`)) return;
+  showLoading(true);
+  try {
+    await api('DELETE', `/api/employees/${id}`);
+    emps = emps.filter(e=>e.id!==id);
+    render();
+    toast('🗑️ Removido!');
+  } catch(e){ toast('Erro: '+e.message, true); }
+  finally { showLoading(false); }
+}
+
+// ─── MODAL ADICIONAR / EDITAR ─────────────────────────────────────────────────
+function openAddModal(){
+  editingId = null;
+  document.getElementById('modalTitle').textContent = '➕ Novo Colaborador';
+  document.getElementById('mTeam').value = cur;
+  ['mName','mNb','mCel','mPin','mMs','mWifi','mObs'].forEach(i=>document.getElementById(i).value='');
+  document.getElementById('modalErr').classList.remove('show');
+  document.getElementById('addModal').classList.add('open');
+}
+
+function openEditModal(id){
+  const e = emps.find(x=>x.id===id); if(!e) return;
+  editingId = id;
+  document.getElementById('modalTitle').textContent = '✏️ Editar Colaborador';
+  document.getElementById('mName').value = e.name;
+  document.getElementById('mTeam').value = e.team;
+  document.getElementById('mNb').value   = e.nb||'';
+  document.getElementById('mCel').value  = e.cel||'';
+  document.getElementById('mPin').value  = e.pin||'';
+  document.getElementById('mMs').value   = e.ms||'';
+  document.getElementById('mWifi').value = e.wifi||'';
+  document.getElementById('mObs').value  = e.obs||'';
+  document.getElementById('modalErr').classList.remove('show');
+  document.getElementById('addModal').classList.add('open');
+}
+
+function closeModal(){
+  document.getElementById('addModal').classList.remove('open');
+  editingId = null;
+}
+
+async function saveModal(){
+  const name = document.getElementById('mName').value.trim();
+  if(!name){ showModalErr('Digite o nome do colaborador.'); return; }
+  const payload = {
+    name, team: document.getElementById('mTeam').value,
+    nb:   document.getElementById('mNb').value.trim(),
+    cel:  document.getElementById('mCel').value.trim(),
+    pin:  document.getElementById('mPin').value.trim(),
+    ms:   document.getElementById('mMs').value.trim(),
+    wifi: document.getElementById('mWifi').value.trim(),
+    obs:  document.getElementById('mObs').value.trim(),
+  };
+  showLoading(true);
+  try {
+    if(editingId){
+      const updated = await api('PUT', `/api/employees/${editingId}`, payload);
+      const idx = emps.findIndex(x=>x.id===editingId);
+      emps[idx] = updated;
+      toast('✅ Atualizado!');
+    } else {
+      const created = await api('POST', '/api/employees', payload);
+      emps.push(created);
+      cur = created.team;
+      toast('✅ Adicionado!');
+    }
+    closeModal();
+    render();
+  } catch(e){ showModalErr(e.message); }
+  finally { showLoading(false); }
+}
+
+function showModalErr(msg){ const el=document.getElementById('modalErr'); el.textContent=msg; el.classList.add('show'); }
+
+document.getElementById('addModal').addEventListener('click',function(e){if(e.target===this)closeModal();});
+
+// ─── TROCAR SENHA ─────────────────────────────────────────────────────────────
+function openPwModal(){ document.getElementById('pwModal').classList.add('open'); document.getElementById('pwErr').classList.remove('show'); ['pwCurrent','pwNew','pwConfirm'].forEach(i=>document.getElementById(i).value=''); }
+function closePwModal(){ document.getElementById('pwModal').classList.remove('open'); }
+document.getElementById('pwModal').addEventListener('click',function(e){if(e.target===this)closePwModal();});
+
+async function changePassword(){
+  const cur = document.getElementById('pwCurrent').value;
+  const nw  = document.getElementById('pwNew').value;
+  const cf  = document.getElementById('pwConfirm').value;
+  const err = document.getElementById('pwErr');
+  err.classList.remove('show');
+  if(nw !== cf){ err.textContent='As senhas não coincidem.'; err.classList.add('show'); return; }
+  if(nw.length < 6){ err.textContent='Senha deve ter pelo menos 6 caracteres.'; err.classList.add('show'); return; }
+  try {
+    await api('POST','/api/auth/change-password',{currentPassword:cur,newPassword:nw});
+    closePwModal(); toast('✅ Senha alterada!');
+  } catch(e){ err.textContent=e.message; err.classList.add('show'); }
+}
+
+// ─── ADMIN USUÁRIOS ───────────────────────────────────────────────────────────
+async function openAdminModal(){
+  document.getElementById('adminModal').classList.add('open');
+  document.getElementById('adminErr').classList.remove('show');
+  await refreshUserList();
+}
+function closeAdminModal(){ document.getElementById('adminModal').classList.remove('open'); }
+document.getElementById('adminModal').addEventListener('click',function(e){if(e.target===this)closeAdminModal();});
+
+async function refreshUserList(){
+  try {
+    const users = await api('GET','/api/users');
+    document.getElementById('adminUserList').innerHTML = `
+      <table class="admin-table">
+        <thead><tr><th>Usuário</th><th>Perfil</th><th>Criado em</th><th></th></tr></thead>
+        <tbody>${users.map(u=>`
+          <tr>
+            <td>${escHtml(u.username)}</td>
+            <td><span class="role-badge ${u.role==='admin'?'role-admin':'role-user'}">${u.role}</span></td>
+            <td style="color:var(--text-muted)">${u.created_at?.slice(0,10)||'—'}</td>
+            <td>${u.id!==currentUser?.id?`<button class="btn btn-danger btn-sm" onclick="deleteUser(${u.id},'${escHtml(u.username)}')">Remover</button>`:''}</td>
+          </tr>`).join('')}
+        </tbody>
+      </table>`;
+  } catch(e){ document.getElementById('adminErr').textContent=e.message; document.getElementById('adminErr').classList.add('show'); }
+}
+
+async function createUser(){
+  const login = document.getElementById('newUserLogin').value.trim();
+  const pass  = document.getElementById('newUserPass').value;
+  const role  = document.getElementById('newUserRole').value;
+  const err   = document.getElementById('adminErr');
+  err.classList.remove('show');
+  if(!login||!pass){ err.textContent='Preencha login e senha.'; err.classList.add('show'); return; }
+  try {
+    await api('POST','/api/users',{username:login,password:pass,role});
+    document.getElementById('newUserLogin').value='';
+    document.getElementById('newUserPass').value='';
+    await refreshUserList();
+    toast('✅ Usuário criado!');
+  } catch(e){ err.textContent=e.message; err.classList.add('show'); }
+}
+
+async function deleteUser(id, name){
+  if(!confirm(`Remover usuário "${name}"?`)) return;
+  try {
+    await api('DELETE',`/api/users/${id}`);
+    await refreshUserList();
+    toast('🗑️ Usuário removido!');
+  } catch(e){ toast(e.message,true); }
+}
+
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+checkAuth();
+</script>
+</body>
+</html>
