@@ -3,6 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <title>GRE-CorpVault — Controle de Senhas Corporativas</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
@@ -19,9 +22,13 @@
   .logo-text { font-family:'Syne',sans-serif; font-weight:800; font-size:20px; }
   .logo-text span { color:var(--accent); }
   .logo-sub { font-size:10px; color:var(--text-muted); letter-spacing:2px; text-transform:uppercase; }
-  .header-right { display:flex; gap:10px; align-items:center; }
+  .header-right { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+  .sync-info { font-size:10px; color:var(--text-muted); display:flex; align-items:center; gap:8px; }
+  .sync-dot { width:7px; height:7px; border-radius:50%; background:var(--green); animation:pulse 2s infinite; }
+  .sync-dot.offline { background:var(--red); animation:none; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
   .search-box { display:flex; align-items:center; gap:8px; background:var(--surface2); border:1px solid var(--border); border-radius:8px; padding:8px 14px; }
-  .search-box input { background:none; border:none; outline:none; color:var(--text); font-family:'DM Mono',monospace; font-size:12px; width:190px; }
+  .search-box input { background:none; border:none; outline:none; color:var(--text); font-family:'DM Mono',monospace; font-size:12px; width:160px; }
   .search-box input::placeholder { color:var(--text-muted); }
   .btn { padding:8px 16px; border-radius:6px; border:none; cursor:pointer; font-family:'DM Mono',monospace; font-size:12px; transition:all .2s; }
   .btn-primary { background:var(--accent); color:#fff; }
@@ -32,6 +39,8 @@
   .btn-danger:hover { background:var(--red); color:#fff; }
   .btn-save { background:var(--green); color:#0a0b0f; font-size:11px; padding:5px 10px; }
   .btn-sm { font-size:11px; padding:5px 10px; }
+  .btn-refresh { background:transparent; color:var(--text-muted); border:1px solid var(--border); font-size:11px; padding:6px 12px; }
+  .btn-refresh:hover { color:var(--accent); border-color:var(--accent); }
   .container { display:flex; min-height:calc(100vh - 65px); }
   .sidebar { width:228px; background:var(--surface); border-right:1px solid var(--border); padding:20px 0; flex-shrink:0; position:sticky; top:65px; height:calc(100vh - 65px); overflow-y:auto; }
   .sidebar-section { padding:8px 16px 4px; font-size:10px; color:var(--text-muted); text-transform:uppercase; letter-spacing:2px; }
@@ -96,16 +105,14 @@
   .loading-screen { position:fixed; inset:0; background:var(--bg); z-index:500; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; }
   .spinner { width:40px; height:40px; border:3px solid var(--border); border-top-color:var(--accent); border-radius:50%; animation:spin .8s linear infinite; }
   @keyframes spin { to { transform:rotate(360deg); } }
-  ::-webkit-scrollbar { width:5px; height:5px; }
-  ::-webkit-scrollbar-track { background:var(--bg); }
-  ::-webkit-scrollbar-thumb { background:var(--border); border-radius:3px; }
+  ::-webkit-scrollbar { width:5px; } ::-webkit-scrollbar-track { background:var(--bg); } ::-webkit-scrollbar-thumb { background:var(--border); border-radius:3px; }
 </style>
 </head>
 <body>
 
 <div class="loading-screen" id="loading-screen">
   <div class="spinner"></div>
-  <span style="color:var(--text-muted);font-size:13px">Carregando dados...</span>
+  <span style="color:var(--text-muted);font-size:13px">Conectando ao banco de dados...</span>
 </div>
 
 <div class="header">
@@ -117,9 +124,14 @@
     </div>
   </div>
   <div class="header-right">
+    <div class="sync-info">
+      <div class="sync-dot" id="sync-dot"></div>
+      <span id="last-update">Carregando...</span>
+    </div>
+    <button class="btn btn-refresh" onclick="refreshData(true)">🔄 Atualizar</button>
     <div class="search-box">
       <span>🔍</span>
-      <input type="text" id="globalSearch" placeholder="Buscar colaborador..." oninput="renderMain()">
+      <input type="text" id="globalSearch" placeholder="Buscar..." oninput="renderMain()">
     </div>
     <button class="btn btn-primary" onclick="openAddModal()">+ Colaborador</button>
   </div>
@@ -161,52 +173,15 @@
 
 <div class="toast" id="toast"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 // ============================================================
 // SUPABASE CONFIG
 // ============================================================
 const SUPABASE_URL = 'https://rdaeoidwhquqkqubellz.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJkYWVvaWR3aHF1cWtxdWJlbGx6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY3MjUzNjIsImV4cCI6MjA5MjMwMTM2Mn0.lgTklEinS2JLsRfyG-MKd2D1UQp06FIlkar1bg3Ciog';
-const TABLE = 'colaboradores';
 
-async function sbFetch(method, path, body) {
-  const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
-    method,
-    headers: {
-      'apikey': SUPABASE_KEY,
-      'Authorization': `Bearer ${SUPABASE_KEY}`,
-      'Content-Type': 'application/json',
-      'Prefer': method === 'POST' ? 'return=representation' : 'return=minimal'
-    },
-    body: body ? JSON.stringify(body) : undefined
-  });
-  if (!res.ok) {
-    const err = await res.text();
-    throw new Error(err);
-  }
-  const text = await res.text();
-  return text ? JSON.parse(text) : null;
-}
-
-// GET todos
-async function dbGetAll() {
-  return await sbFetch('GET', `${TABLE}?order=id.asc`);
-}
-
-// UPDATE um registro
-async function dbUpdate(id, data) {
-  return await sbFetch('PATCH', `${TABLE}?id=eq.${id}`, data);
-}
-
-// INSERT novo
-async function dbInsert(data) {
-  return await sbFetch('POST', TABLE, data);
-}
-
-// DELETE
-async function dbDelete(id) {
-  return await sbFetch('DELETE', `${TABLE}?id=eq.${id}`);
-}
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // ============================================================
 // TEAMS
@@ -221,6 +196,85 @@ const TEAMS = {
 };
 
 let emps = [], cur = 'intelcomer', editing = new Set(), shown = {};
+let refreshTimer = null;
+
+// ============================================================
+// DB FUNCTIONS
+// ============================================================
+async function dbGetAll() {
+  const { data, error } = await sb
+    .from('colaboradores')
+    .select('*')
+    .order('id', { ascending: true });
+  if (error) throw error;
+  return data || [];
+}
+
+async function dbUpdate(id, data) {
+  const { error } = await sb
+    .from('colaboradores')
+    .update(data)
+    .eq('id', id);
+  if (error) throw error;
+}
+
+async function dbInsert(data) {
+  const { data: inserted, error } = await sb
+    .from('colaboradores')
+    .insert(data)
+    .select();
+  if (error) throw error;
+  return inserted;
+}
+
+async function dbDelete(id) {
+  const { error } = await sb
+    .from('colaboradores')
+    .delete()
+    .eq('id', id);
+  if (error) throw error;
+}
+
+// ============================================================
+// REFRESH
+// ============================================================
+async function refreshData(showMsg = false) {
+  try {
+    const dot = document.getElementById('sync-dot');
+    dot.classList.remove('offline');
+    emps = await dbGetAll();
+    const now = new Date().toLocaleTimeString('pt-BR');
+    document.getElementById('last-update').textContent = 'Atualizado: ' + now;
+    render();
+    if (showMsg) toast('🔄 Dados atualizados!');
+  } catch(e) {
+    document.getElementById('sync-dot').classList.add('offline');
+    document.getElementById('last-update').textContent = 'Erro na conexão';
+    if (showMsg) toast('❌ Erro ao atualizar', true);
+  }
+}
+
+function startAutoRefresh() {
+  if (refreshTimer) clearInterval(refreshTimer);
+  refreshTimer = setInterval(() => {
+    // Só atualiza se não houver cards em edição
+    if (editing.size === 0) refreshData(false);
+  }, 5000);
+}
+
+// ============================================================
+// REALTIME
+// ============================================================
+function setupRealtime() {
+  sb.channel('colaboradores-changes')
+    .on('postgres_changes', 
+      { event: '*', schema: 'public', table: 'colaboradores' },
+      () => {
+        if (editing.size === 0) refreshData(false);
+      }
+    )
+    .subscribe();
+}
 
 // ============================================================
 // LOAD
@@ -229,14 +283,18 @@ async function load() {
   document.getElementById('loading-screen').style.display = 'flex';
   try {
     emps = await dbGetAll();
-    if (!emps || emps.length === 0) emps = [];
+    const now = new Date().toLocaleTimeString('pt-BR');
+    document.getElementById('last-update').textContent = 'Atualizado: ' + now;
   } catch(e) {
-    console.error('Erro ao carregar:', e);
+    document.getElementById('sync-dot').classList.add('offline');
+    document.getElementById('last-update').textContent = 'Erro na conexão';
     toast('❌ Erro ao carregar dados', true);
     emps = [];
   }
   document.getElementById('loading-screen').style.display = 'none';
   render();
+  startAutoRefresh();
+  setupRealtime();
 }
 
 // ============================================================
@@ -298,7 +356,7 @@ function card(e) {
     if (mask && !sh) return `<div class="fdisp masked">••••••••</div>`;
     return `<div class="fdisp">${v}</div>`;
   }
-  function fi(id, v) { return `<input class="finput" id="${id}" type="text" value="${(v||'').replace(/"/g,'&quot;')}">` }
+  function fi(fid, v) { return `<input class="finput" id="${fid}" type="text" value="${(v||'').replace(/"/g,'&quot;')}">` }
   return `<div class="emp-card">
     <div class="card-head">
       <div class="emp-info">
@@ -361,11 +419,11 @@ async function saveCard(id) {
   toast('💾 Salvando...');
   try {
     await dbUpdate(id, data);
-    Object.assign(e, data);
     editing.delete(id);
-    render();
+    await refreshData(false);
     toast('✅ Salvo com sucesso!');
   } catch(err) {
+    console.error(err);
     toast('❌ Erro ao salvar', true);
   }
 }
@@ -375,8 +433,7 @@ async function delEmp(id) {
   toast('🗑️ Removendo...');
   try {
     await dbDelete(id);
-    emps = emps.filter(e=>e.id!==id);
-    render();
+    await refreshData(false);
     toast('✅ Removido!');
   } catch(err) {
     toast('❌ Erro ao remover', true);
@@ -395,9 +452,9 @@ function closeModal() {
 async function addEmp() {
   const name = document.getElementById('mName').value.trim();
   if (!name) { alert('Digite o nome.'); return; }
-  const maxId = emps.length ? Math.max(...emps.map(e=>e.id)) : 0;
+  const maxId = emps.length ? Math.max(...emps.map(e=>+e.id)) : 0;
   const data = {
-    id: maxId + 1,
+    id:   maxId + 1,
     name,
     team: document.getElementById('mTeam').value,
     nb:   document.getElementById('mNb').value.trim(),
@@ -409,13 +466,13 @@ async function addEmp() {
   };
   toast('💾 Salvando...');
   try {
-    const inserted = await dbInsert(data);
-    emps.push(inserted ? inserted[0] : data);
+    await dbInsert(data);
     cur = data.team;
     closeModal();
-    render();
+    await refreshData(false);
     toast('✅ Colaborador adicionado!');
   } catch(err) {
+    console.error(err);
     toast('❌ Erro ao adicionar', true);
   }
 }
