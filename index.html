@@ -257,22 +257,18 @@ async function load(){
 }
 
 async function save(showToast=true){
-  // Salva localmente também como backup
+  // Salva localmente como backup
   localStorage.setItem('cv4', JSON.stringify({emps, nextId}));
   
   if(showToast) toast('💾 Salvando...');
   try {
-    // Converte objetos para linhas da planilha
     const rows = emps.map(e => [
       e.id, e.name, e.team,
       e.nb||'', e.cel||'', e.pin||'',
       e.ms||'', e.wifi||'', e.obs||''
     ]);
-    await fetch(SHEET_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify(rows)
-    });
+    const encoded = encodeURIComponent(JSON.stringify(rows));
+    await fetch(SHEET_URL + '?action=save&data=' + encoded, { method: 'GET' });
     if(showToast) toast('✅ Salvo e sincronizado!');
   } catch(e) {
     if(showToast) toast('⚠️ Salvo localmente (sem conexão)');
