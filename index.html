@@ -13,7 +13,6 @@
   }
   * { margin:0; padding:0; box-sizing:border-box; }
   body { font-family:'DM Mono',monospace; background:var(--bg); color:var(--text); min-height:100vh; }
-
   .header { background:var(--surface); border-bottom:1px solid var(--border); padding:16px 28px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:100; }
   .logo-wrap { display:flex; align-items:center; gap:12px; }
   .logo-icon { width:36px; height:36px; background:var(--accent); border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:18px; }
@@ -26,14 +25,13 @@
   .search-box input::placeholder { color:var(--text-muted); }
   .btn { padding:8px 16px; border-radius:6px; border:none; cursor:pointer; font-family:'DM Mono',monospace; font-size:12px; transition:all .2s; }
   .btn-primary { background:var(--accent); color:#fff; }
-  .btn-primary:hover { background:#5a52e0; transform:translateY(-1px); }
+  .btn-primary:hover { background:#5a52e0; }
   .btn-ghost { background:transparent; color:var(--text-dim); border:1px solid var(--border); }
   .btn-ghost:hover { border-color:var(--accent); color:var(--accent); }
   .btn-danger { background:transparent; color:var(--red); border:1px solid var(--red); font-size:11px; padding:5px 10px; }
   .btn-danger:hover { background:var(--red); color:#fff; }
   .btn-save { background:var(--green); color:#0a0b0f; font-size:11px; padding:5px 10px; }
   .btn-sm { font-size:11px; padding:5px 10px; }
-
   .container { display:flex; min-height:calc(100vh - 65px); }
   .sidebar { width:228px; background:var(--surface); border-right:1px solid var(--border); padding:20px 0; flex-shrink:0; position:sticky; top:65px; height:calc(100vh - 65px); overflow-y:auto; }
   .sidebar-section { padding:8px 16px 4px; font-size:10px; color:var(--text-muted); text-transform:uppercase; letter-spacing:2px; }
@@ -43,20 +41,16 @@
   .sidebar-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
   .sidebar-count { margin-left:auto; font-size:10px; background:var(--surface2); padding:2px 6px; border-radius:10px; color:var(--text-muted); }
   .sidebar-item.active .sidebar-count { background:var(--accent); color:#fff; }
-
   .main { flex:1; padding:24px 28px; overflow-x:hidden; }
   .team-header { display:flex; align-items:center; gap:12px; margin-bottom:18px; }
   .team-badge { width:12px; height:12px; border-radius:50%; flex-shrink:0; }
   .team-name { font-family:'Syne',sans-serif; font-size:21px; font-weight:700; }
   .team-count-chip { font-size:11px; color:var(--text-muted); background:var(--surface2); padding:3px 10px; border-radius:20px; }
-
   .stats-bar { display:flex; gap:12px; margin-bottom:20px; flex-wrap:wrap; }
   .stat-chip { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:10px 16px; }
   .stat-num { font-family:'Syne',sans-serif; font-size:20px; font-weight:700; }
   .stat-label { color:var(--text-muted); font-size:10px; text-transform:uppercase; letter-spacing:1px; }
-
   .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(340px,1fr)); gap:14px; }
-
   .emp-card { background:var(--surface); border:1px solid var(--border); border-radius:12px; overflow:hidden; transition:border-color .2s,transform .2s; }
   .emp-card:hover { border-color:var(--accent); transform:translateY(-2px); }
   .card-head { padding:12px 14px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--border); }
@@ -65,7 +59,6 @@
   .emp-name { font-family:'Syne',sans-serif; font-weight:600; font-size:12px; line-height:1.3; }
   .emp-tag { font-size:9px; color:var(--text-muted); text-transform:uppercase; letter-spacing:1px; margin-top:2px; }
   .has-extra { font-size:9px; background:rgba(249,199,79,.15); color:var(--yellow); border:1px solid rgba(249,199,79,.3); border-radius:4px; padding:1px 5px; margin-left:4px; }
-
   .card-body { padding:12px 14px; }
   .frow { display:flex; align-items:center; gap:8px; margin-bottom:8px; }
   .frow:last-child { margin-bottom:0; }
@@ -77,19 +70,15 @@
   .fdisp.masked { letter-spacing:3px; font-size:12px; }
   .finput { flex:1; background:var(--surface2); border:1px solid var(--accent); border-radius:5px; padding:5px 9px; font-size:11px; color:var(--text); font-family:'DM Mono',monospace; outline:none; min-height:28px; }
   .frow.xtra { background:var(--surface2); border-radius:6px; padding:5px 8px; margin-top:3px; }
-
   .icon-btn { background:none; border:none; cursor:pointer; font-size:13px; padding:3px 5px; border-radius:4px; transition:background .15s; color:var(--text-muted); }
   .icon-btn:hover { background:var(--surface2); color:var(--text); }
   .card-foot { padding:8px 14px; border-top:1px solid var(--border); display:flex; gap:8px; justify-content:flex-end; }
-
   .add-card { background:var(--surface); border:2px dashed var(--border); border-radius:12px; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:28px; cursor:pointer; transition:all .2s; min-height:140px; gap:8px; color:var(--text-muted); font-size:12px; }
   .add-card:hover { border-color:var(--accent); color:var(--accent); }
   .add-card .plus { font-size:26px; }
-
   .empty-state { grid-column:1/-1; text-align:center; padding:60px 20px; color:var(--text-muted); }
   .empty-state .emoji { font-size:48px; margin-bottom:16px; }
   .empty-state h3 { font-family:'Syne',sans-serif; font-size:18px; color:var(--text-dim); margin-bottom:8px; }
-
   .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.75); z-index:200; display:none; align-items:center; justify-content:center; }
   .modal-overlay.open { display:flex; }
   .modal { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:26px; width:460px; max-width:95vw; max-height:90vh; overflow-y:auto; }
@@ -101,16 +90,23 @@
   .fg select option { background:var(--surface2); }
   .fsec { font-size:10px; color:var(--yellow); text-transform:uppercase; letter-spacing:2px; margin:14px 0 8px; padding-bottom:4px; border-bottom:1px solid var(--border); }
   .modal-actions { display:flex; gap:10px; justify-content:flex-end; margin-top:16px; }
-
-  .toast { position:fixed; bottom:24px; right:24px; background:var(--surface); border:1px solid var(--green); border-radius:8px; padding:11px 18px; font-size:13px; color:var(--green); z-index:300; transform:translateY(80px); opacity:0; transition:all .3s; }
+  .toast { position:fixed; bottom:24px; right:24px; background:var(--surface); border:1px solid var(--green); border-radius:8px; padding:11px 18px; font-size:13px; color:var(--green); z-index:300; transform:translateY(80px); opacity:0; transition:all .3s; pointer-events:none; }
   .toast.show { transform:translateY(0); opacity:1; }
-
+  .toast.error { border-color:var(--red); color:var(--red); }
+  .loading-screen { position:fixed; inset:0; background:var(--bg); z-index:500; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; }
+  .spinner { width:40px; height:40px; border:3px solid var(--border); border-top-color:var(--accent); border-radius:50%; animation:spin .8s linear infinite; }
+  @keyframes spin { to { transform:rotate(360deg); } }
   ::-webkit-scrollbar { width:5px; height:5px; }
   ::-webkit-scrollbar-track { background:var(--bg); }
   ::-webkit-scrollbar-thumb { background:var(--border); border-radius:3px; }
 </style>
 </head>
 <body>
+
+<div class="loading-screen" id="loading-screen">
+  <div class="spinner"></div>
+  <span style="color:var(--text-muted);font-size:13px">Carregando dados...</span>
+</div>
 
 <div class="header">
   <div class="logo-wrap">
@@ -166,165 +162,118 @@
 <div class="toast" id="toast"></div>
 
 <script>
+// ============================================================
+// SUPABASE CONFIG
+// ============================================================
+const SUPABASE_URL = 'https://rdaeoidwhquqkqubellz.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJkYWVvaWR3aHF1cWtxdWJlbGx6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY3MjUzNjIsImV4cCI6MjA5MjMwMTM2Mn0.lgTklEinS2JLsRfyG-MKd2D1UQp06FIlkar1bg3Ciog';
+const TABLE = 'colaboradores';
+
+async function sbFetch(method, path, body) {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
+    method,
+    headers: {
+      'apikey': SUPABASE_KEY,
+      'Authorization': `Bearer ${SUPABASE_KEY}`,
+      'Content-Type': 'application/json',
+      'Prefer': method === 'POST' ? 'return=representation' : 'return=minimal'
+    },
+    body: body ? JSON.stringify(body) : undefined
+  });
+  if (!res.ok) {
+    const err = await res.text();
+    throw new Error(err);
+  }
+  const text = await res.text();
+  return text ? JSON.parse(text) : null;
+}
+
+// GET todos
+async function dbGetAll() {
+  return await sbFetch('GET', `${TABLE}?order=id.asc`);
+}
+
+// UPDATE um registro
+async function dbUpdate(id, data) {
+  return await sbFetch('PATCH', `${TABLE}?id=eq.${id}`, data);
+}
+
+// INSERT novo
+async function dbInsert(data) {
+  return await sbFetch('POST', TABLE, data);
+}
+
+// DELETE
+async function dbDelete(id) {
+  return await sbFetch('DELETE', `${TABLE}?id=eq.${id}`);
+}
+
+// ============================================================
+// TEAMS
+// ============================================================
 const TEAMS = {
   posvenda:   { label:'POS-VENDA',              color:'#f472b6', icon:'💼' },
   cobranca:   { label:'COBRANÇA',               color:'#fb923c', icon:'📋' },
   sdr:        { label:'SDR',                    color:'#34d399', icon:'📞' },
-  poscontemp: { label:'POS-CONTEMPLAÇÃO',        color:'#60a5fa', icon:'🏆' },
+  poscontemp: { label:'POS-CONTEMPLAÇÃO',       color:'#60a5fa', icon:'🏆' },
   backoffice: { label:'BACKOFFICE',             color:'#a78bfa', icon:'🗂️' },
   intelcomer: { label:'INTELIGÊNCIA COMERCIAL', color:'#f59e0b', icon:'📊' },
 };
 
-// Todos os dados extraídos das imagens das planilhas
-const SEED = [
-  // ─── PÓS-CONTEMPLAÇÃO ───
-  {id:1,  name:'Sara Bezerra Santos',                    team:'poscontemp', nb:'', cel:'', pin:'', ms:'', wifi:'', obs:''},
-  {id:2,  name:'Pedro Paulo Diniz Sousa',                team:'poscontemp', nb:'', cel:'', pin:'', ms:'', wifi:'', obs:''},
-  {id:3,  name:'Dominik Rocha Dias',                     team:'poscontemp', nb:'', cel:'', pin:'', ms:'', wifi:'', obs:''},
+let emps = [], cur = 'intelcomer', editing = new Set(), shown = {};
 
-  // ─── BACKOFFICE ───
-  {id:10, name:'Arthur Nicolas da Silva Bomfim',         team:'backoffice', nb:'', cel:'', pin:'', ms:'', wifi:'', obs:''},
-  {id:11, name:'Mayara dos Santos Paulino',              team:'backoffice', nb:'', cel:'', pin:'', ms:'', wifi:'', obs:''},
-  {id:12, name:'Luana Pereira de Paula',                 team:'backoffice', nb:'', cel:'', pin:'', ms:'', wifi:'', obs:''},
-  {id:13, name:'Marcelo Lopes Sampaio Moreira',          team:'backoffice', nb:'', cel:'', pin:'', ms:'', wifi:'', obs:''},
-
-  // ─── INTELIGÊNCIA COMERCIAL ───
-  {id:20, name:'Livia Maria Neves Ribeiro',              team:'intelcomer', nb:'', cel:'', pin:'', ms:'', wifi:'', obs:''},
-  {id:21, name:'Carolina Valeria dos Santos',            team:'intelcomer', nb:'', cel:'', pin:'', ms:'', wifi:'', obs:''},
-  {id:22, name:'Nicolas Ferreira Montagna',              team:'intelcomer', nb:'', cel:'', pin:'', ms:'', wifi:'', obs:''},
-  {id:23, name:'Gabriela Karla Leonardo do Carmo',       team:'intelcomer', nb:'', cel:'', pin:'', ms:'', wifi:'', obs:''},
-  {id:24, name:'Julia Degam Vargas',                     team:'intelcomer', nb:'', cel:'', pin:'', ms:'', wifi:'', obs:''},
-  {id:25, name:'Kaisa Caroline de Freitas Martins',      team:'intelcomer', nb:'', cel:'', pin:'', ms:'', wifi:'', obs:''},
-  {id:26, name:'Vitoria da Silva Vasques',               team:'intelcomer', nb:'', cel:'', pin:'', ms:'', wifi:'', obs:''},
-  {id:27, name:'Anna Carolina Arantes Moreira',          team:'intelcomer', nb:'', cel:'', pin:'', ms:'', wifi:'', obs:''},
-  {id:28, name:'Evellyn Vitoria dos Reis Melo',          team:'intelcomer', nb:'', cel:'', pin:'', ms:'', wifi:'', obs:''},
-  {id:29, name:'Renan Intrieri Fiebig Machado',          team:'intelcomer', nb:'', cel:'', pin:'', ms:'', wifi:'', obs:''},
-  {id:30, name:'Marcio da Silva Nogaroto',               team:'intelcomer', nb:'', cel:'', pin:'', ms:'', wifi:'', obs:''},
-  {id:31, name:'Leonardo Cavalcante Tavares Beato',      team:'intelcomer', nb:'', cel:'', pin:'', ms:'', wifi:'', obs:''},
-  {id:32, name:'Pietra Isabelle Lopes da Silva',         team:'intelcomer', nb:'', cel:'', pin:'', ms:'', wifi:'', obs:''},
-  {id:33, name:'Igor de Oliveira Duarte',                team:'intelcomer', nb:'', cel:'', pin:'', ms:'', wifi:'', obs:''},
-  {id:34, name:'Melyssa Costa',                         team:'intelcomer', nb:'', cel:'', pin:'', ms:'', wifi:'', obs:''},
-
-  // ─── COBRANÇA ───
-  {id:40, name:'Maria Fernanda Alves dos Santos',        team:'cobranca', nb:'', cel:'', pin:'', ms:'', wifi:'', obs:''},
-  {id:41, name:'Hanally Henrique de Oliveira',           team:'cobranca', nb:'', cel:'', pin:'', ms:'', wifi:'', obs:''},
-  {id:42, name:'Ana Carolina de Andrade',                team:'cobranca', nb:'', cel:'', pin:'', ms:'', wifi:'', obs:''},
-
-  // ─── PÓS-VENDA ───
-  {id:50, name:'Maria Eduarda Goncalves Teixeira',       team:'posvenda', nb:'', cel:'', pin:'', ms:'', wifi:'', obs:''},
-  {id:51, name:'Leticia Juvelina Monteiro Sun',          team:'posvenda', nb:'', cel:'', pin:'', ms:'', wifi:'', obs:''},
-  {id:52, name:'Regiane Ponciano dos Santos Souza',      team:'posvenda', nb:'', cel:'', pin:'', ms:'', wifi:'', obs:''},
-  {id:53, name:'Stephane dos Santos Soares',             team:'posvenda', nb:'', cel:'', pin:'', ms:'', wifi:'', obs:''},
-  {id:54, name:'Rafaela Morais da Silva Faria',          team:'posvenda', nb:'', cel:'', pin:'', ms:'', wifi:'', obs:''},
-  {id:55, name:'Bruna Fernanda da Silva Santos',         team:'posvenda', nb:'', cel:'', pin:'', ms:'', wifi:'', obs:''},
-
-  // ─── SDR ─── (sem colaboradores no momento)
-];
-
-let emps=[], nextId=300, cur='intelcomer', editing=new Set(), shown={};
-
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw9nrAKlcLhRfF74o93IA0ZxxcQRaRvNVYqPzkVOn4hlIeaIj6ormymJIvN5kehYOQ7dQ/exec';
-const SHEET_ID = '10sfELRXxXlqjQlD_W-1dlH4K_kFPpgw5JOAFf8g3rTI';
-
-async function syncFromSheets() {
-  return new Promise((resolve) => {
-    const cb = 'gcb' + Date.now();
-    const sc = document.createElement('script');
-    window[cb] = function(data) {
-      try { delete window[cb]; sc.remove(); } catch(e){}
-      try {
-        if (data && data.table && data.table.rows && data.table.rows.length > 0) {
-          const parsed = data.table.rows.map(r => ({
-            id: +(r.c[0]?.v||0),
-            name: String(r.c[1]?.v||''),
-            team: String(r.c[2]?.v||''),
-            nb: String(r.c[3]?.v||''),
-            cel: String(r.c[4]?.v||''),
-            pin: String(r.c[5]?.v||''),
-            ms: String(r.c[6]?.v||''),
-            wifi: String(r.c[7]?.v||''),
-            obs: String(r.c[8]?.v||'')
-          })).filter(e => e.id && e.name);
-          if (parsed.length > 0) {
-            emps = parsed;
-            nextId = Math.max(...emps.map(e=>e.id), 299) + 1;
-            localStorage.setItem('cv4', JSON.stringify({emps, nextId}));
-            resolve(true);
-            return;
-          }
-        }
-      } catch(e) {}
-      resolve(false);
-    };
-    sc.onerror = () => { try{sc.remove();}catch(e){} resolve(false); };
-    sc.src = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&tq=select+*&sheet=dados&callback=${cb}&_=${Date.now()}`;
-    document.head.appendChild(sc);
-    setTimeout(() => resolve(false), 8000);
-  });
-}
-
-async function load(){
-  // 1. Carrega imediatamente — nunca trava
+// ============================================================
+// LOAD
+// ============================================================
+async function load() {
+  document.getElementById('loading-screen').style.display = 'flex';
   try {
-    const s = localStorage.getItem('cv4');
-    if(s) { const p=JSON.parse(s); emps=p.emps||SEED.map(e=>({...e})); nextId=p.nextId||300; }
-    else { emps=SEED.map(e=>({...e})); nextId=300; }
-  } catch { emps=SEED.map(e=>({...e})); nextId=300; }
-  render();
-
-  // 2. Sincroniza com Sheets em background
-  const ok = await syncFromSheets();
-  if (ok) render();
-}
-
-async function save(showToast=true){
-  localStorage.setItem('cv4', JSON.stringify({emps, nextId}));
-  if(showToast) toast('💾 Salvando...');
-  try {
-    const rows = emps.map(e => [
-      e.id, e.name, e.team,
-      e.nb||'', e.cel||'', e.pin||'',
-      e.ms||'', e.wifi||'', e.obs||''
-    ]);
-    const encoded = encodeURIComponent(JSON.stringify(rows));
-    // Salva via Apps Script usando image tag (evita CORS completamente)
-    await new Promise((resolve) => {
-      const img = new Image();
-      img.onload = img.onerror = resolve;
-      img.src = SCRIPT_URL + '?action=save&data=' + encoded;
-    });
-    if(showToast) toast('✅ Salvo! Recarregue para ver em outros dispositivos.');
+    emps = await dbGetAll();
+    if (!emps || emps.length === 0) emps = [];
   } catch(e) {
-    if(showToast) toast('⚠️ Salvo localmente');
+    console.error('Erro ao carregar:', e);
+    toast('❌ Erro ao carregar dados', true);
+    emps = [];
   }
+  document.getElementById('loading-screen').style.display = 'none';
+  render();
 }
-function initials(n){return n.replace(/\s*\(.*?\)\s*/g,'').trim().split(' ').slice(0,2).map(x=>x[0]||'').join('').toUpperCase();}
 
-function sidebar(){
-  let h='<div class="sidebar-section">Times</div>';
-  for(const[k,t] of Object.entries(TEAMS)){
-    const c=emps.filter(e=>e.team===k).length;
-    h+=`<div class="sidebar-item${k===cur?' active':''}" onclick="go('${k}')">
+// ============================================================
+// RENDER
+// ============================================================
+function initials(n) {
+  return n.replace(/\s*\(.*?\)\s*/g,'').trim().split(' ').slice(0,2).map(x=>x[0]||'').join('').toUpperCase();
+}
+
+function sidebar() {
+  let h = '<div class="sidebar-section">Times</div>';
+  for (const [k,t] of Object.entries(TEAMS)) {
+    const c = emps.filter(e=>e.team===k).length;
+    h += `<div class="sidebar-item${k===cur?' active':''}" onclick="go('${k}')">
       <div class="sidebar-dot" style="background:${t.color}"></div>
       <span>${t.label}</span><span class="sidebar-count">${c}</span></div>`;
   }
-  document.getElementById('sidebar').innerHTML=h;
+  document.getElementById('sidebar').innerHTML = h;
 }
 
-function renderMain(){
-  const team=TEAMS[cur];
-  const te=emps.filter(e=>e.team===cur);
-  const q=(document.getElementById('globalSearch')?.value||'').toLowerCase();
-  const fe=te.filter(e=>e.name.toLowerCase().includes(q));
-  const wNb=te.filter(e=>e.nb).length, wCel=te.filter(e=>e.cel).length, wPin=te.filter(e=>e.pin).length;
+function renderMain() {
+  const team = TEAMS[cur];
+  const te = emps.filter(e=>e.team===cur);
+  const q = (document.getElementById('globalSearch')?.value||'').toLowerCase();
+  const fe = te.filter(e=>e.name.toLowerCase().includes(q));
+  const wNb = te.filter(e=>e.nb).length;
+  const wCel = te.filter(e=>e.cel).length;
+  const wPin = te.filter(e=>e.pin).length;
 
-  let cards=fe.map(card).join('');
-  let empty='';
-  if(!fe.length) empty=`<div class="empty-state"><div class="emoji">${cur==='sdr'&&!te.length?'📞':'🔍'}</div>
+  let empty = '';
+  if (!fe.length) empty = `<div class="empty-state">
+    <div class="emoji">${cur==='sdr'&&!te.length?'📞':'🔍'}</div>
     <h3>${cur==='sdr'&&!te.length?'SDR sem colaboradores':'Nenhum resultado'}</h3>
-    <p>${cur==='sdr'&&!te.length?'Adicione o primeiro membro.':'Tente outro termo de busca.'}</p></div>`;
+    <p>${cur==='sdr'&&!te.length?'Adicione o primeiro membro.':'Tente outro termo de busca.'}</p>
+  </div>`;
 
-  document.getElementById('main').innerHTML=`
+  document.getElementById('main').innerHTML = `
     <div class="team-header">
       <div class="team-badge" style="background:${team.color}"></div>
       <div class="team-name">${team.icon} ${team.label}</div>
@@ -336,21 +285,21 @@ function renderMain(){
       <div class="stat-chip"><div class="stat-num" style="color:var(--green)">${wCel}</div><div class="stat-label">Celular</div></div>
       <div class="stat-chip"><div class="stat-num" style="color:var(--yellow)">${wPin}</div><div class="stat-label">PIN</div></div>
     </div>
-    <div class="grid">${cards}${empty}
+    <div class="grid">${fe.map(card).join('')}${empty}
       <div class="add-card" onclick="openAddModal()"><span class="plus">+</span><span>Adicionar colaborador</span></div>
     </div>`;
 }
 
-function card(e){
-  const t=TEAMS[e.team], ed=editing.has(e.id), sh=shown[e.id];
-  const hasX=e.ms||e.wifi||e.obs;
-  function fv(v,mask=true){
-    if(!v)return`<div class="fdisp empty">—</div>`;
-    if(mask&&!sh)return`<div class="fdisp masked">••••••••</div>`;
-    return`<div class="fdisp">${v}</div>`;
+function card(e) {
+  const t = TEAMS[e.team], ed = editing.has(e.id), sh = shown[e.id];
+  const hasX = e.ms || e.wifi || e.obs;
+  function fv(v, mask=true) {
+    if (!v) return `<div class="fdisp empty">—</div>`;
+    if (mask && !sh) return `<div class="fdisp masked">••••••••</div>`;
+    return `<div class="fdisp">${v}</div>`;
   }
-  function fi(id,v,ph=''){return`<input class="finput" id="${id}" type="text" value="${v.replace(/"/g,'&quot;')}" placeholder="${ph}">`;}
-  return`<div class="emp-card">
+  function fi(id, v) { return `<input class="finput" id="${id}" type="text" value="${(v||'').replace(/"/g,'&quot;')}">` }
+  return `<div class="emp-card">
     <div class="card-head">
       <div class="emp-info">
         <div class="avatar" style="background:${t.color}20;color:${t.color};border:1px solid ${t.color}40">${initials(e.name)}</div>
@@ -362,29 +311,29 @@ function card(e){
       <button class="icon-btn" onclick="toggleShow(${e.id})">${sh?'🙈':'👁️'}</button>
     </div>
     <div class="card-body">
-      ${ed?`
+      ${ed ? `
         <div class="frow"><div class="flbl">💻 Notebook</div><div class="fwrap">${fi('nb-'+e.id,e.nb)}</div></div>
         <div class="frow"><div class="flbl">📱 Celular</div><div class="fwrap">${fi('cel-'+e.id,e.cel)}</div></div>
         <div class="frow"><div class="flbl">🔢 PIN</div><div class="fwrap">${fi('pin-'+e.id,e.pin)}</div></div>
         <div class="frow"><div class="flbl ylw">📧 Microsoft</div><div class="fwrap">${fi('ms-'+e.id,e.ms)}</div></div>
         <div class="frow"><div class="flbl ylw">📶 Wi-Fi</div><div class="fwrap">${fi('wf-'+e.id,e.wifi)}</div></div>
         <div class="frow"><div class="flbl ylw">📝 Obs</div><div class="fwrap">${fi('obs-'+e.id,e.obs)}</div></div>
-      `:`
+      ` : `
         <div class="frow"><div class="flbl">💻 Notebook</div><div class="fwrap">${fv(e.nb)}</div></div>
         <div class="frow"><div class="flbl">📱 Celular</div><div class="fwrap">${fv(e.cel,false)}</div></div>
         <div class="frow"><div class="flbl">🔢 PIN</div><div class="fwrap">${fv(e.pin)}</div></div>
-        ${hasX?`
+        ${hasX ? `
           ${e.ms?`<div class="frow xtra"><div class="flbl ylw">📧 Microsoft</div><div class="fwrap">${fv(e.ms,false)}</div></div>`:''}
           ${e.wifi?`<div class="frow xtra"><div class="flbl ylw">📶 Wi-Fi</div><div class="fwrap">${fv(e.wifi,false)}</div></div>`:''}
           ${e.obs?`<div class="frow xtra"><div class="flbl ylw">📝 Obs</div><div class="fwrap">${fv(e.obs,false)}</div></div>`:''}
-        `:''}
+        ` : ''}
       `}
     </div>
     <div class="card-foot">
-      ${ed?`
+      ${ed ? `
         <button class="btn btn-ghost btn-sm" onclick="cancelEdit(${e.id})">Cancelar</button>
         <button class="btn btn-save btn-sm" onclick="saveCard(${e.id})">💾 Salvar</button>
-      `:`
+      ` : `
         <button class="btn btn-danger btn-sm" onclick="delEmp(${e.id})">🗑️</button>
         <button class="btn btn-ghost btn-sm" onclick="startEdit(${e.id})">✏️ Editar</button>
       `}
@@ -392,42 +341,98 @@ function card(e){
   </div>`;
 }
 
-function go(k){cur=k;editing.clear();render();}
-function render(){sidebar();renderMain();}
-function startEdit(id){editing.add(id);renderMain();}
-function cancelEdit(id){editing.delete(id);renderMain();}
-function toggleShow(id){shown[id]=!shown[id];renderMain();}
-async function saveCard(id){
-  const e=emps.find(x=>x.id===id);if(!e)return;
-  e.nb=document.getElementById('nb-'+id)?.value||'';
-  e.cel=document.getElementById('cel-'+id)?.value||'';
-  e.pin=document.getElementById('pin-'+id)?.value||'';
-  e.ms=document.getElementById('ms-'+id)?.value||'';
-  e.wifi=document.getElementById('wf-'+id)?.value||'';
-  e.obs=document.getElementById('obs-'+id)?.value||'';
-  editing.delete(id);await save();render();
-}
-async function delEmp(id){if(!confirm('Remover este colaborador?'))return;emps=emps.filter(e=>e.id!==id);await save();render();}
-function openAddModal(){document.getElementById('mTeam').value=cur;document.getElementById('addModal').classList.add('open');}
-function closeModal(){
-  document.getElementById('addModal').classList.remove('open');
-  ['mName','mNb','mCel','mPin','mMs','mWifi','mObs'].forEach(i=>document.getElementById(i).value='');
-}
-async function addEmp(){
-  const name=document.getElementById('mName').value.trim();
-  if(!name){alert('Digite o nome.');return;}
-  emps.push({id:nextId++,name,team:document.getElementById('mTeam').value,
-    nb:document.getElementById('mNb').value.trim(),cel:document.getElementById('mCel').value.trim(),
-    pin:document.getElementById('mPin').value.trim(),ms:document.getElementById('mMs').value.trim(),
-    wifi:document.getElementById('mWifi').value.trim(),obs:document.getElementById('mObs').value.trim()});
-  cur=document.getElementById('mTeam').value;closeModal();await save();render();
-}
-function toast(msg){
-  const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),2000);
-}
-document.getElementById('addModal').addEventListener('click',function(e){if(e.target===this)closeModal();});
+function render() { sidebar(); renderMain(); }
+function go(k) { cur=k; editing.clear(); render(); }
+function startEdit(id) { editing.add(id); renderMain(); }
+function cancelEdit(id) { editing.delete(id); renderMain(); }
+function toggleShow(id) { shown[id]=!shown[id]; renderMain(); }
 
+async function saveCard(id) {
+  const e = emps.find(x=>x.id===id);
+  if (!e) return;
+  const data = {
+    nb:   document.getElementById('nb-'+id)?.value  || '',
+    cel:  document.getElementById('cel-'+id)?.value  || '',
+    pin:  document.getElementById('pin-'+id)?.value  || '',
+    ms:   document.getElementById('ms-'+id)?.value   || '',
+    wifi: document.getElementById('wf-'+id)?.value   || '',
+    obs:  document.getElementById('obs-'+id)?.value  || '',
+  };
+  toast('💾 Salvando...');
+  try {
+    await dbUpdate(id, data);
+    Object.assign(e, data);
+    editing.delete(id);
+    render();
+    toast('✅ Salvo com sucesso!');
+  } catch(err) {
+    toast('❌ Erro ao salvar', true);
+  }
+}
+
+async function delEmp(id) {
+  if (!confirm('Remover este colaborador?')) return;
+  toast('🗑️ Removendo...');
+  try {
+    await dbDelete(id);
+    emps = emps.filter(e=>e.id!==id);
+    render();
+    toast('✅ Removido!');
+  } catch(err) {
+    toast('❌ Erro ao remover', true);
+  }
+}
+
+function openAddModal() {
+  document.getElementById('mTeam').value = cur;
+  document.getElementById('addModal').classList.add('open');
+}
+function closeModal() {
+  document.getElementById('addModal').classList.remove('open');
+  ['mName','mNb','mCel','mPin','mMs','mWifi','mObs'].forEach(i => document.getElementById(i).value='');
+}
+
+async function addEmp() {
+  const name = document.getElementById('mName').value.trim();
+  if (!name) { alert('Digite o nome.'); return; }
+  const maxId = emps.length ? Math.max(...emps.map(e=>e.id)) : 0;
+  const data = {
+    id: maxId + 1,
+    name,
+    team: document.getElementById('mTeam').value,
+    nb:   document.getElementById('mNb').value.trim(),
+    cel:  document.getElementById('mCel').value.trim(),
+    pin:  document.getElementById('mPin').value.trim(),
+    ms:   document.getElementById('mMs').value.trim(),
+    wifi: document.getElementById('mWifi').value.trim(),
+    obs:  document.getElementById('mObs').value.trim(),
+  };
+  toast('💾 Salvando...');
+  try {
+    const inserted = await dbInsert(data);
+    emps.push(inserted ? inserted[0] : data);
+    cur = data.team;
+    closeModal();
+    render();
+    toast('✅ Colaborador adicionado!');
+  } catch(err) {
+    toast('❌ Erro ao adicionar', true);
+  }
+}
+
+function toast(msg, isErr=false) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (isErr ? ' error' : '');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.className='toast', 3000);
+}
+
+document.getElementById('addModal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+
+// INIT
 load();
 </script>
 </body>
