@@ -223,7 +223,7 @@ const SEED = [
 
 let emps=[], nextId=300, cur='intelcomer', editing=new Set(), shown={};
 
-const SHEET_URL = 'https://script.google.com/macros/s/AKfycbw7a_2bXhT8AWWSuYFU-fHS7r-O2eBy7DrPiW2dFo0_seyDUmflFpRQrq-zCQCXLffUJg/exec';
+const SHEET_URL = 'https://script.google.com/macros/s/AKfycbw9nrAKlcLhRfF74o93IA0ZxxcQRaRvNVYqPzkVOn4hlIeaIj6ormymJIvN5kehYOQ7dQ/exec';
 
 async function load(){
   // Mostra loading
@@ -270,8 +270,7 @@ async function save(showToast=true){
     ]);
     await fetch(SHEET_URL, {
       method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'text/plain' },
       body: JSON.stringify(rows)
     });
     if(showToast) toast('✅ Salvo e sincronizado!');
