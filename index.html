@@ -262,13 +262,30 @@ function loadFromSheets() {
 
 async function load(){
   document.getElementById('main').innerHTML = '<div style="padding:60px;text-align:center;color:var(--text-muted)"><div style="font-size:32px;margin-bottom:16px">⏳</div><div>Carregando dados...</div></div>';
-  const ok = await loadFromSheets();
+  
+  // Timeout de 5 segundos para o Sheets carregar
+  const ok = await Promise.race([
+    loadFromSheets(),
+    new Promise(r => setTimeout(() => r(false), 5000))
+  ]);
+  
   if (!ok) {
+    // Fallback: usa SEED como base (sempre tem os dados)
     try {
       const s = localStorage.getItem('cv4');
-      if(s){const p=JSON.parse(s);emps=p.emps;nextId=p.nextId||300;}
-      else { emps=SEED.map(e=>({...e})); await save(false); }
-    } catch { emps=SEED.map(e=>({...e})); }
+      if(s) {
+        const p = JSON.parse(s);
+        emps = p.emps || SEED.map(e=>({...e}));
+        nextId = p.nextId || 300;
+      } else {
+        emps = SEED.map(e=>({...e}));
+        nextId = 300;
+      }
+    } catch { 
+      emps = SEED.map(e=>({...e}));
+      nextId = 300;
+    }
+    toast('⚠️ Usando dados locais — Sheets indisponível');
   }
   render();
 }
