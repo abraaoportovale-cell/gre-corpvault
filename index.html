@@ -177,72 +177,46 @@ const TEAMS = {
 
 // Todos os dados extraídos das imagens das planilhas
 const SEED = [
-  // ─── INTELIGÊNCIA COMERCIAL ───
-  {id:1, name:'Anna Carolina Arantes Moreira',     team:'intelcomer', nb:'Anna@2026!!',    cel:'',                 pin:'',    ms:'Arantes@2026!!', wifi:'', obs:''},
-  {id:2, name:'Carolina Valeria dos Santos',        team:'intelcomer', nb:'Porto@Vale',     cel:'(12) 2018-1021',   pin:'',    ms:'', wifi:'', obs:''},
-  {id:3, name:'Vitoria da Silva Vasques',           team:'intelcomer', nb:'Porto@Vale',     cel:'12 2018-1009',     pin:'2026',ms:'', wifi:'', obs:''},
-  {id:4, name:'Nicolas Ferreira Montagna',          team:'intelcomer', nb:'Porto@Vale',     cel:'1220181012',       pin:'2026',ms:'', wifi:'', obs:''},
-  {id:5, name:'Kaisa Caroline de Freitas Martins',  team:'intelcomer', nb:'Porto@Vale',     cel:'12 2018-1029',     pin:'2026',ms:'', wifi:'', obs:''},
-  {id:6, name:'Renan Intrieri Fiebig Machado',      team:'intelcomer', nb:'Porto@Vale',     cel:'(12)2018-1009',    pin:'2026',ms:'', wifi:'', obs:''},
-  {id:7, name:'Evellyn Vitoria dos Reis Melo',      team:'intelcomer', nb:'Porto@Vale',     cel:'12 2018-0956',     pin:'2026',ms:'', wifi:'', obs:''},
-  {id:8, name:'Marcio da Silva Nogaroto',           team:'intelcomer', nb:'Porto@Vale',     cel:'12 3600-2690',     pin:'',    ms:'', wifi:'', obs:''},
-  {id:9, name:'Pietra Isabelle Lopes da Silva',     team:'intelcomer', nb:'Porto@Vale',     cel:'(12) 2018-0957',   pin:'',    ms:'', wifi:'', obs:''},
-  {id:10,name:'Livia Maria Neves Ribeiro',          team:'intelcomer', nb:'Porto@Vale',     cel:'(12) 2018-1021',   pin:'',    ms:'', wifi:'', obs:''},
-  {id:11,name:'Leonardo Cavalcante Tavares Beato',  team:'intelcomer', nb:'',               cel:'',                 pin:'',    ms:'', wifi:'', obs:''},
-  {id:12,name:'Igor de Oliveira Duarte',            team:'intelcomer', nb:'',               cel:'',                 pin:'',    ms:'', wifi:'', obs:''},
-  {id:13,name:'Arthur Nicolas da Silva Bomfim',     team:'intelcomer', nb:'',               cel:'',                 pin:'',    ms:'', wifi:'', obs:''},
-
-  // ─── POS-VENDA ───
-  {id:20,name:'Maria Eduarda Goncalves Teixeira',   team:'posvenda', nb:'', cel:'', pin:'', ms:'', wifi:'', obs:''},
-  {id:22,name:'Regiane Ponciano dos Santos Souza',  team:'posvenda', nb:'', cel:'', pin:'', ms:'', wifi:'', obs:''},
-  {id:23,name:'Rafaela Morais da Silva Faria',      team:'posvenda', nb:'', cel:'', pin:'', ms:'', wifi:'', obs:''},
-  {id:24,name:'Bruna Fernanda da Silva Santos',     team:'posvenda', nb:'', cel:'', pin:'', ms:'', wifi:'', obs:''},
-  {id:28,name:'Stephane dos Santos Soares',         team:'posvenda', nb:'', cel:'', pin:'', ms:'', wifi:'', obs:''},
-  {id:25,name:'Tânia (Pós-Venda)',                  team:'posvenda', nb:'', cel:'1858',               pin:'', ms:'', wifi:'', obs:'Tempo Pós-Venda Baju'},
-  {id:26,name:'Número PV-1',                        team:'posvenda', nb:'', cel:'12 3042-6017',       pin:'', ms:'', wifi:'Validação Wi-Fi1: 103625 | Validação Wi-Fi2: 308125', obs:''},
-  {id:27,name:'Número PV-2',                        team:'posvenda', nb:'', cel:'12 3042-8617',       pin:'', ms:'', wifi:'Validação Wi-Fi1: 703625', obs:''},
-
-  // ─── COBRANÇA ───
-  {id:30,name:'Gabriela Karla Leonardo do Carmo',   team:'cobranca', nb:'',            cel:'', pin:'', ms:'', wifi:'', obs:''},
-  {id:31,name:'Maria Fernanda Alves dos Santos',    team:'cobranca', nb:'',            cel:'', pin:'', ms:'', wifi:'', obs:''},
-  {id:32,name:'Vitoria da Silva Vasques (Cobr)',    team:'cobranca', nb:'Porto@Vale',  cel:'12 2018-1009', pin:'2026', ms:'', wifi:'', obs:''},
-  {id:33,name:'Hanally Henrique de Oliveira',       team:'cobranca', nb:'',            cel:'', pin:'', ms:'', wifi:'', obs:''},
-  {id:34,name:'Marcio da Silva Nogaroto (Cobr)',    team:'cobranca', nb:'Porto@Vale',  cel:'12 3600-2690', pin:'', ms:'', wifi:'', obs:''},
-  {id:35,name:'Ana Carolina de Andrade',            team:'cobranca', nb:'',            cel:'', pin:'', ms:'', wifi:'', obs:''},
-  {id:36,name:'Tânia (Cobrança)',                   team:'cobranca', nb:'',            cel:'1858',             pin:'', ms:'', wifi:'', obs:'Tempo Cobrança Baju'},
-  {id:37,name:'Bruna Santos (Cobr)',                team:'cobranca', nb:'Porto@vale',  cel:'', pin:'', ms:'', wifi:'', obs:''},
-  {id:38,name:'Loana',                              team:'cobranca', nb:'@yorksvale',  cel:'', pin:'', ms:'', wifi:'WhatsApp: 541218', obs:''},
-  {id:39,name:'Número Cobrança',                    team:'cobranca', nb:'',            cel:'12 3042-1083', pin:'', ms:'', wifi:'Validação Wi-Fi1: 290812', obs:''},
-  {id:40,name:'Número Cobrança-2',                  team:'cobranca', nb:'',            cel:'12 2013-6481', pin:'', ms:'', wifi:'Validação Wi-Fi2: 290812', obs:''},
-  {id:41,name:'Número Nagrane (Cobr)',              team:'cobranca', nb:'',            cel:'12 3042-5313', pin:'', ms:'', wifi:'Validação Wi-Fi1: 125014', obs:''},
-
-  // ─── POS-CONTEMPLAÇÃO ───
-  {id:50,name:'Sara Bezerra Santos',                team:'poscontemp', nb:'',              cel:'', pin:'', ms:'', wifi:'', obs:''},
-  {id:51,name:'Pedro Paulo Diniz Sousa',            team:'poscontemp', nb:'',              cel:'', pin:'', ms:'', wifi:'', obs:''},
-  {id:52,name:'Dominik Rocha Dias',                 team:'poscontemp', nb:'Porto@vale',    cel:'1703 - PN 298098', pin:'', ms:'', wifi:'', obs:''},
-  {id:53,name:'Brunna (Pós-Contemp)',               team:'poscontemp', nb:'Porto@Vale29',  cel:'12 2680 - PN 258098', pin:'', ms:'', wifi:'', obs:''},
+  // ─── PÓS-CONTEMPLAÇÃO ───
+  {id:1,  name:'Sara Bezerra Santos',                    team:'poscontemp', nb:'', cel:'', pin:'', ms:'', wifi:'', obs:''},
+  {id:2,  name:'Pedro Paulo Diniz Sousa',                team:'poscontemp', nb:'', cel:'', pin:'', ms:'', wifi:'', obs:''},
+  {id:3,  name:'Dominik Rocha Dias',                     team:'poscontemp', nb:'', cel:'', pin:'', ms:'', wifi:'', obs:''},
 
   // ─── BACKOFFICE ───
-  {id:60,name:'Julia Degam Vargas',                 team:'backoffice', nb:'Porto@Vale',  cel:'',                       pin:'', ms:'', wifi:'', obs:''},
-  {id:61,name:'Mayara dos Santos Paulino',          team:'backoffice', nb:'Porto!!',     cel:'1010 | PN 140425',       pin:'', ms:'', wifi:'', obs:''},
-  {id:62,name:'Leticia Juvelina Monteiro Sun',      team:'backoffice', nb:'Porto@Vale',  cel:'',                       pin:'', ms:'', wifi:'', obs:''},
-  {id:63,name:'Marcelo Lopes Sampaio Moreira',      team:'backoffice', nb:'',            cel:'',                       pin:'', ms:'', wifi:'', obs:''},
-  {id:21,name:'Luana Pereira de Paula',             team:'backoffice', nb:'',            cel:'',                       pin:'', ms:'', wifi:'', obs:''},
-  {id:64,name:'Rosalani Oliveira',                  team:'backoffice', nb:'Porto@vale',  cel:'Não possui celular da empresa', pin:'', ms:'', wifi:'', obs:''},
-  {id:65,name:'Dayanne Martins',                    team:'backoffice', nb:'Porto@Vale',  cel:'1808',                   pin:'', ms:'', wifi:'', obs:''},
-  {id:66,name:'Erica',                              team:'backoffice', nb:'Porto@vale',  cel:'1103',                   pin:'', ms:'', wifi:'', obs:''},
-  {id:67,name:'Abrãao',                             team:'backoffice', nb:'Porto@1616',  cel:'',                       pin:'', ms:'', wifi:'', obs:''},
-  {id:68,name:'Jéssica Camilo Batalha',             team:'backoffice', nb:'Jes@26!',     cel:'12 2018-2157',           pin:'', ms:'', wifi:'', obs:''},
-  {id:69,name:'Melyssa',                            team:'backoffice', nb:'Eagles@25!!', cel:'',                       pin:'', ms:'', wifi:'', obs:''},
-  // Computadores JAC
-  {id:70,name:'Ana Carolina (JAC)',                 team:'backoffice', nb:'15Joey/k34',  cel:'', pin:'', ms:'', wifi:'', obs:'COMPUTADORES JAC'},
-  {id:71,name:'Hanessaly (JAC)',                    team:'backoffice', nb:'Porto@Vale',  cel:'', pin:'', ms:'', wifi:'', obs:'COMPUTADORES JAC'},
-  {id:72,name:'Gabriela (JAC)',                     team:'backoffice', nb:'15Joey/k34',  cel:'', pin:'', ms:'', wifi:'', obs:'COMPUTADORES JAC'},
-  {id:73,name:'Nathaela (JAC)',                     team:'backoffice', nb:'Porto@Vale',  cel:'', pin:'', ms:'', wifi:'', obs:'COMPUTADORES JAC'},
-  {id:74,name:'Maria Fernanda (JAC)',               team:'backoffice', nb:'Porto@Vale',  cel:'', pin:'', ms:'', wifi:'Senha: Sem senha', obs:'COMPUTADORES JAC'},
-  {id:75,name:'Regiane (JAC)',                      team:'backoffice', nb:'Porto@Vale',  cel:'', pin:'', ms:'', wifi:'', obs:'COMPUTADORES JAC'},
-  {id:76,name:'Stephanie (JAC)',                    team:'backoffice', nb:'15Joey/k34',  cel:'', pin:'', ms:'', wifi:'', obs:'COMPUTADORES JAC'},
-  {id:77,name:'Maria Eduarda (JAC)',                team:'backoffice', nb:'Porto@Vale',  cel:'', pin:'', ms:'', wifi:'', obs:'COMPUTADORES JAC'},
+  {id:10, name:'Arthur Nicolas da Silva Bomfim',         team:'backoffice', nb:'', cel:'', pin:'', ms:'', wifi:'', obs:''},
+  {id:11, name:'Mayara dos Santos Paulino',              team:'backoffice', nb:'', cel:'', pin:'', ms:'', wifi:'', obs:''},
+  {id:12, name:'Luana Pereira de Paula',                 team:'backoffice', nb:'', cel:'', pin:'', ms:'', wifi:'', obs:''},
+  {id:13, name:'Marcelo Lopes Sampaio Moreira',          team:'backoffice', nb:'', cel:'', pin:'', ms:'', wifi:'', obs:''},
+
+  // ─── INTELIGÊNCIA COMERCIAL ───
+  {id:20, name:'Livia Maria Neves Ribeiro',              team:'intelcomer', nb:'', cel:'', pin:'', ms:'', wifi:'', obs:''},
+  {id:21, name:'Carolina Valeria dos Santos',            team:'intelcomer', nb:'', cel:'', pin:'', ms:'', wifi:'', obs:''},
+  {id:22, name:'Nicolas Ferreira Montagna',              team:'intelcomer', nb:'', cel:'', pin:'', ms:'', wifi:'', obs:''},
+  {id:23, name:'Gabriela Karla Leonardo do Carmo',       team:'intelcomer', nb:'', cel:'', pin:'', ms:'', wifi:'', obs:''},
+  {id:24, name:'Julia Degam Vargas',                     team:'intelcomer', nb:'', cel:'', pin:'', ms:'', wifi:'', obs:''},
+  {id:25, name:'Kaisa Caroline de Freitas Martins',      team:'intelcomer', nb:'', cel:'', pin:'', ms:'', wifi:'', obs:''},
+  {id:26, name:'Vitoria da Silva Vasques',               team:'intelcomer', nb:'', cel:'', pin:'', ms:'', wifi:'', obs:''},
+  {id:27, name:'Anna Carolina Arantes Moreira',          team:'intelcomer', nb:'', cel:'', pin:'', ms:'', wifi:'', obs:''},
+  {id:28, name:'Evellyn Vitoria dos Reis Melo',          team:'intelcomer', nb:'', cel:'', pin:'', ms:'', wifi:'', obs:''},
+  {id:29, name:'Renan Intrieri Fiebig Machado',          team:'intelcomer', nb:'', cel:'', pin:'', ms:'', wifi:'', obs:''},
+  {id:30, name:'Marcio da Silva Nogaroto',               team:'intelcomer', nb:'', cel:'', pin:'', ms:'', wifi:'', obs:''},
+  {id:31, name:'Leonardo Cavalcante Tavares Beato',      team:'intelcomer', nb:'', cel:'', pin:'', ms:'', wifi:'', obs:''},
+  {id:32, name:'Pietra Isabelle Lopes da Silva',         team:'intelcomer', nb:'', cel:'', pin:'', ms:'', wifi:'', obs:''},
+  {id:33, name:'Igor de Oliveira Duarte',                team:'intelcomer', nb:'', cel:'', pin:'', ms:'', wifi:'', obs:''},
+  {id:34, name:'Melyssa Costa',                         team:'intelcomer', nb:'', cel:'', pin:'', ms:'', wifi:'', obs:''},
+
+  // ─── COBRANÇA ───
+  {id:40, name:'Maria Fernanda Alves dos Santos',        team:'cobranca', nb:'', cel:'', pin:'', ms:'', wifi:'', obs:''},
+  {id:41, name:'Hanally Henrique de Oliveira',           team:'cobranca', nb:'', cel:'', pin:'', ms:'', wifi:'', obs:''},
+  {id:42, name:'Ana Carolina de Andrade',                team:'cobranca', nb:'', cel:'', pin:'', ms:'', wifi:'', obs:''},
+
+  // ─── PÓS-VENDA ───
+  {id:50, name:'Maria Eduarda Goncalves Teixeira',       team:'posvenda', nb:'', cel:'', pin:'', ms:'', wifi:'', obs:''},
+  {id:51, name:'Leticia Juvelina Monteiro Sun',          team:'posvenda', nb:'', cel:'', pin:'', ms:'', wifi:'', obs:''},
+  {id:52, name:'Regiane Ponciano dos Santos Souza',      team:'posvenda', nb:'', cel:'', pin:'', ms:'', wifi:'', obs:''},
+  {id:53, name:'Stephane dos Santos Soares',             team:'posvenda', nb:'', cel:'', pin:'', ms:'', wifi:'', obs:''},
+  {id:54, name:'Rafaela Morais da Silva Faria',          team:'posvenda', nb:'', cel:'', pin:'', ms:'', wifi:'', obs:''},
+  {id:55, name:'Bruna Fernanda da Silva Santos',         team:'posvenda', nb:'', cel:'', pin:'', ms:'', wifi:'', obs:''},
 
   // ─── SDR ─── (sem colaboradores no momento)
 ];
