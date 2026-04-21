@@ -226,8 +226,45 @@ let emps=[], nextId=300, cur='intelcomer', editing=new Set(), shown={};
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw9nrAKlcLhRfF74o93IA0ZxxcQRaRvNVYqPzkVOn4hlIeaIj6ormymJIvN5kehYOQ7dQ/exec';
 const SHEET_ID = '10sfELRXxXlqjQlD_W-1dlH4K_kFPpgw5JOAFf8g3rTI';
 
+async function syncFromSheets() {
+  return new Promise((resolve) => {
+    const cb = 'gcb' + Date.now();
+    const sc = document.createElement('script');
+    window[cb] = function(data) {
+      try { delete window[cb]; sc.remove(); } catch(e){}
+      try {
+        if (data && data.table && data.table.rows && data.table.rows.length > 0) {
+          const parsed = data.table.rows.map(r => ({
+            id: +(r.c[0]?.v||0),
+            name: String(r.c[1]?.v||''),
+            team: String(r.c[2]?.v||''),
+            nb: String(r.c[3]?.v||''),
+            cel: String(r.c[4]?.v||''),
+            pin: String(r.c[5]?.v||''),
+            ms: String(r.c[6]?.v||''),
+            wifi: String(r.c[7]?.v||''),
+            obs: String(r.c[8]?.v||'')
+          })).filter(e => e.id && e.name);
+          if (parsed.length > 0) {
+            emps = parsed;
+            nextId = Math.max(...emps.map(e=>e.id), 299) + 1;
+            localStorage.setItem('cv4', JSON.stringify({emps, nextId}));
+            resolve(true);
+            return;
+          }
+        }
+      } catch(e) {}
+      resolve(false);
+    };
+    sc.onerror = () => { try{sc.remove();}catch(e){} resolve(false); };
+    sc.src = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&tq=select+*&sheet=dados&callback=${cb}&_=${Date.now()}`;
+    document.head.appendChild(sc);
+    setTimeout(() => resolve(false), 8000);
+  });
+}
+
 async function load(){
-  // 1. Carrega imediatamente do localStorage ou SEED
+  // 1. Carrega imediatamente — nunca trava
   try {
     const s = localStorage.getItem('cv4');
     if(s) { const p=JSON.parse(s); emps=p.emps||SEED.map(e=>({...e})); nextId=p.nextId||300; }
@@ -235,37 +272,9 @@ async function load(){
   } catch { emps=SEED.map(e=>({...e})); nextId=300; }
   render();
 
-  // 2. Tenta sincronizar com Sheets em background
-  try {
-    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=dados&t=${Date.now()}`;
-    const resp = await fetch(url, {cache:'no-store'});
-    const csv = await resp.text();
-    const lines = csv.trim().split('\n').filter(l=>l.trim());
-    if (lines.length > 0) {
-      const parsed = lines.map(line => {
-        const cols = line.split(',').map(c => c.replace(/^"|"$/g,'').trim());
-        return {
-          id: +(cols[0]||0),
-          name: cols[1]||'',
-          team: cols[2]||'',
-          nb: cols[3]||'',
-          cel: cols[4]||'',
-          pin: cols[5]||'',
-          ms: cols[6]||'',
-          wifi: cols[7]||'',
-          obs: cols[8]||''
-        };
-      }).filter(e => e.id && e.name);
-      if (parsed.length > 0) {
-        emps = parsed;
-        nextId = Math.max(...emps.map(e=>e.id), 299) + 1;
-        localStorage.setItem('cv4', JSON.stringify({emps, nextId}));
-        render();
-      }
-    }
-  } catch(e) {
-    console.warn('Sheets sync falhou:', e);
-  }
+  // 2. Sincroniza com Sheets em background
+  const ok = await syncFromSheets();
+  if (ok) render();
 }
 
 async function save(showToast=true){
