@@ -3,21 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Expires" content="0">
 <title>GRE-CorpVault — Controle de Senhas Corporativas</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg:#0a0b0f;--surface:#12141a;--surface2:#1a1d26;--border:#252836;
-    --accent:#6c63ff;--text:#e8eaf0;--text-muted:#6b7280;--text-dim:#9ca3af;
-    --green:#43e97b;--yellow:#f9c74f;--red:#ef4444;
-  }
+  :root{--bg:#0a0b0f;--surface:#12141a;--surface2:#1a1d26;--border:#252836;--accent:#6c63ff;--text:#e8eaf0;--text-muted:#6b7280;--text-dim:#9ca3af;--green:#43e97b;--yellow:#f9c74f;--red:#ef4444;}
   *{margin:0;padding:0;box-sizing:border-box;}
   body{font-family:'DM Mono',monospace;background:var(--bg);color:var(--text);min-height:100vh;}
-
-  /* LOGIN */
   .login-screen{position:fixed;inset:0;background:var(--bg);z-index:1000;display:flex;align-items:center;justify-content:center;}
   .login-box{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:48px 40px;width:400px;max-width:95vw;text-align:center;}
   .login-icon{font-size:48px;margin-bottom:16px;}
@@ -33,13 +24,9 @@
   .login-btn:disabled{opacity:.6;cursor:not-allowed;}
   .login-error{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);color:var(--red);border-radius:8px;padding:10px 14px;font-size:12px;margin-top:12px;display:none;}
   .login-error.show{display:block;}
-
-  /* LOADING */
   .loading-screen{position:fixed;inset:0;background:var(--bg);z-index:500;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;}
   .spinner{width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;}
   @keyframes spin{to{transform:rotate(360deg);}}
-
-  /* APP */
   .app{display:none;}
   .app.visible{display:block;}
   .header{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 28px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;flex-wrap:wrap;gap:10px;}
@@ -133,77 +120,50 @@
 </style>
 </head>
 <body>
-
-<!-- LOADING -->
 <div class="loading-screen" id="loading-screen">
   <div class="spinner"></div>
   <span style="color:var(--text-muted);font-size:13px">Verificando sessão...</span>
 </div>
-
-<!-- LOGIN -->
 <div class="login-screen" id="login-screen" style="display:none;">
   <div class="login-box">
     <div class="login-icon">🔐</div>
     <div class="login-title">GRE-Corp<span>Vault</span></div>
     <div class="login-sub">Controle de Senhas Corporativas</div>
-    <div class="login-field">
-      <label>E-mail corporativo</label>
-      <input type="email" id="login-email" placeholder="seu@email.com" autocomplete="email">
-    </div>
-    <div class="login-field">
-      <label>Senha</label>
-      <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
-    </div>
+    <div class="login-field"><label>E-mail corporativo</label><input type="email" id="login-email" placeholder="seu@email.com" autocomplete="email"></div>
+    <div class="login-field"><label>Senha</label><input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()"></div>
     <button class="login-btn" id="login-btn" onclick="doLogin()">Entrar</button>
     <div class="login-error" id="login-error"></div>
   </div>
 </div>
-
-<!-- APP -->
 <div class="app" id="app">
   <div class="header">
     <div class="logo-wrap">
       <div class="logo-icon">🔐</div>
-      <div>
-        <div class="logo-text">GRE-Corp<span>Vault</span></div>
-        <div class="logo-sub">Controle de Senhas Corporativas</div>
-      </div>
+      <div><div class="logo-text">GRE-Corp<span>Vault</span></div><div class="logo-sub">Controle de Senhas Corporativas</div></div>
     </div>
     <div class="header-right">
-      <div class="sync-info">
-        <div class="sync-dot" id="sync-dot"></div>
-        <span id="last-update">Carregando...</span>
-      </div>
+      <div class="sync-info"><div class="sync-dot" id="sync-dot"></div><span id="last-update">Carregando...</span></div>
       <div class="user-chip" id="user-chip">...</div>
       <button class="btn btn-ghost btn-sm" onclick="refreshData(true)">🔄</button>
-      <div class="search-box">
-        <span>🔍</span>
-        <input type="text" id="globalSearch" placeholder="Buscar..." oninput="renderMain()">
-      </div>
+      <div class="search-box"><span>🔍</span><input type="text" id="globalSearch" placeholder="Buscar..." oninput="renderMain()"></div>
       <button class="btn btn-primary" onclick="openAddModal()">+ Colaborador</button>
       <button class="btn btn-logout" onclick="doLogout()">Sair</button>
     </div>
   </div>
-
   <div class="container">
     <div class="sidebar" id="sidebar"></div>
     <div class="main" id="main"></div>
   </div>
 </div>
-
-<!-- MODAL ADICIONAR -->
 <div class="modal-overlay" id="addModal">
   <div class="modal">
     <h3>➕ Novo Colaborador</h3>
     <div class="fg"><label>Nome Completo</label><input type="text" id="mName" placeholder="Nome completo"></div>
     <div class="fg"><label>Time</label>
       <select id="mTeam">
-        <option value="posvenda">POS-VENDA</option>
-        <option value="cobranca">COBRANÇA</option>
-        <option value="sdr">SDR</option>
-        <option value="poscontemp">POS-CONTEMPLAÇÃO</option>
-        <option value="backoffice">BACKOFFICE</option>
-        <option value="intelcomer">INTELIGÊNCIA COMERCIAL</option>
+        <option value="posvenda">POS-VENDA</option><option value="cobranca">COBRANÇA</option>
+        <option value="sdr">SDR</option><option value="poscontemp">POS-CONTEMPLAÇÃO</option>
+        <option value="backoffice">BACKOFFICE</option><option value="intelcomer">INTELIGÊNCIA COMERCIAL</option>
       </select>
     </div>
     <div class="fsec">🔐 Senhas</div>
@@ -214,225 +174,103 @@
     <div class="fg"><label>Microsoft / E-mail</label><input type="text" id="mMs"></div>
     <div class="fg"><label>Wi-Fi / Validação</label><input type="text" id="mWifi"></div>
     <div class="fg"><label>Observações</label><input type="text" id="mObs"></div>
-    <div class="modal-actions">
-      <button class="btn btn-ghost" onclick="closeModal()">Cancelar</button>
-      <button class="btn btn-primary" onclick="addEmp()">Salvar</button>
-    </div>
+    <div class="modal-actions"><button class="btn btn-ghost" onclick="closeModal()">Cancelar</button><button class="btn btn-primary" onclick="addEmp()">Salvar</button></div>
   </div>
 </div>
-
 <div class="toast" id="toast"></div>
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-const SUPABASE_URL = 'https://rdaeoidwhquqkqubellz.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJkYWVvaWR3aHF1cWtxdWJlbGx6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY3MjUzNjIsImV4cCI6MjA5MjMwMTM2Mn0.lgTklEinS2JLsRfyG-MKd2D1UQp06FIlkar1bg3Ciog';
-const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const SUPABASE_URL='https://rdaeoidwhquqkqubellz.supabase.co';
+const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJkYWVvaWR3aHF1cWtxdWJlbGx6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY3MjUzNjIsImV4cCI6MjA5MjMwMTM2Mn0.lgTklEinS2JLsRfyG-MKd2D1UQp06FIlkar1bg3Ciog';
+const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+const TEAMS={posvenda:{label:'POS-VENDA',color:'#f472b6',icon:'💼'},cobranca:{label:'COBRANÇA',color:'#fb923c',icon:'📋'},sdr:{label:'SDR',color:'#34d399',icon:'📞'},poscontemp:{label:'POS-CONTEMPLAÇÃO',color:'#60a5fa',icon:'🏆'},backoffice:{label:'BACKOFFICE',color:'#a78bfa',icon:'🗂️'},intelcomer:{label:'INTELIGÊNCIA COMERCIAL',color:'#f59e0b',icon:'📊'}};
+let emps=[],cur='intelcomer',editing=new Set(),shown={},refreshTimer=null;
 
-const TEAMS = {
-  posvenda:   {label:'POS-VENDA',color:'#f472b6',icon:'💼'},
-  cobranca:   {label:'COBRANÇA',color:'#fb923c',icon:'📋'},
-  sdr:        {label:'SDR',color:'#34d399',icon:'📞'},
-  poscontemp: {label:'POS-CONTEMPLAÇÃO',color:'#60a5fa',icon:'🏆'},
-  backoffice: {label:'BACKOFFICE',color:'#a78bfa',icon:'🗂️'},
-  intelcomer: {label:'INTELIGÊNCIA COMERCIAL',color:'#f59e0b',icon:'📊'},
-};
-
-let emps=[], cur='intelcomer', editing=new Set(), shown={}, refreshTimer=null;
-
-// ── AUTH ──────────────────────────────────────────
-async function doLogin() {
-  const email = document.getElementById('login-email').value.trim();
-  const pass  = document.getElementById('login-password').value;
-  const btn   = document.getElementById('login-btn');
-  const err   = document.getElementById('login-error');
-  if (!email || !pass) { showError('Preencha e-mail e senha.'); return; }
-  btn.disabled = true;
-  btn.textContent = 'Entrando...';
-  err.classList.remove('show');
-  const { error } = await sb.auth.signInWithPassword({ email, password: pass });
-  if (error) {
-    showError('E-mail ou senha incorretos.');
-    btn.disabled = false;
-    btn.textContent = 'Entrar';
+async function boot(){
+  try{
+    const{data:{session}}=await sb.auth.getSession();
+    document.getElementById('loading-screen').style.display='none';
+    if(session){mostrarApp(session);}
+    else{document.getElementById('login-screen').style.display='flex';}
+  }catch(e){
+    document.getElementById('loading-screen').style.display='none';
+    document.getElementById('login-screen').style.display='flex';
   }
-  // onAuthStateChange cuida do resto
 }
 
-function showError(msg) {
-  const e = document.getElementById('login-error');
-  e.textContent = msg;
-  e.classList.add('show');
+function mostrarApp(session){
+  document.getElementById('login-screen').style.display='none';
+  document.getElementById('app').classList.add('visible');
+  document.getElementById('user-chip').textContent=session.user.email;
+  initApp();
 }
 
-async function doLogout() {
-  await sb.auth.signOut();
-}
-
-// Observa mudanças de sessão
-sb.auth.onAuthStateChange(async (event, session) => {
-  document.getElementById('loading-screen').style.display = 'none';
-  if (session) {
-    // Logado
-    document.getElementById('login-screen').style.display = 'none';
-    document.getElementById('login-btn').disabled = false;
-    document.getElementById('login-btn').textContent = 'Entrar';
-    document.getElementById('app').classList.add('visible');
-    document.getElementById('user-chip').textContent = session.user.email;
-    await initApp();
-  } else {
-    // Deslogado
+sb.auth.onAuthStateChange((event,session)=>{
+  if(event==='SIGNED_IN'&&session){
+    document.getElementById('loading-screen').style.display='none';
+    document.getElementById('login-btn').disabled=false;
+    document.getElementById('login-btn').textContent='Entrar';
+    mostrarApp(session);
+  }else if(event==='SIGNED_OUT'){
     document.getElementById('app').classList.remove('visible');
-    document.getElementById('login-screen').style.display = 'flex';
-    if (refreshTimer) clearInterval(refreshTimer);
+    document.getElementById('login-screen').style.display='flex';
+    if(refreshTimer)clearInterval(refreshTimer);
   }
 });
 
-// ── DB ────────────────────────────────────────────
-async function dbGetAll() {
-  const {data,error} = await sb.from('colaboradores').select('*').order('id',{ascending:true});
-  if (error) throw error;
-  return data||[];
+async function doLogin(){
+  const email=document.getElementById('login-email').value.trim();
+  const pass=document.getElementById('login-password').value;
+  const btn=document.getElementById('login-btn');
+  const err=document.getElementById('login-error');
+  if(!email||!pass){showLoginError('Preencha e-mail e senha.');return;}
+  btn.disabled=true;btn.textContent='Entrando...';err.classList.remove('show');
+  const{error}=await sb.auth.signInWithPassword({email,password:pass});
+  if(error){showLoginError('E-mail ou senha incorretos.');btn.disabled=false;btn.textContent='Entrar';}
 }
-async function dbUpdate(id,data) {
-  const {error} = await sb.from('colaboradores').update(data).eq('id',id);
-  if (error) throw error;
-}
-async function dbInsert(data) {
-  const {data:ins,error} = await sb.from('colaboradores').insert(data).select();
-  if (error) throw error;
-  return ins;
-}
-async function dbDelete(id) {
-  const {error} = await sb.from('colaboradores').delete().eq('id',id);
-  if (error) throw error;
-}
+function showLoginError(msg){const e=document.getElementById('login-error');e.textContent=msg;e.classList.add('show');}
+async function doLogout(){if(refreshTimer)clearInterval(refreshTimer);emps=[];await sb.auth.signOut();}
 
-// ── REFRESH ───────────────────────────────────────
-async function refreshData(showMsg=false) {
-  try {
+async function dbGetAll(){const{data,error}=await sb.from('colaboradores').select('*').order('id',{ascending:true});if(error)throw error;return data||[];}
+async function dbUpdate(id,data){const{error}=await sb.from('colaboradores').update(data).eq('id',id);if(error)throw error;}
+async function dbInsert(data){const{data:ins,error}=await sb.from('colaboradores').insert(data).select();if(error)throw error;return ins;}
+async function dbDelete(id){const{error}=await sb.from('colaboradores').delete().eq('id',id);if(error)throw error;}
+
+async function refreshData(showMsg=false){
+  try{
     document.getElementById('sync-dot').classList.remove('offline');
-    emps = await dbGetAll();
-    document.getElementById('last-update').textContent = 'Atualizado: ' + new Date().toLocaleTimeString('pt-BR');
+    emps=await dbGetAll();
+    document.getElementById('last-update').textContent='Atualizado: '+new Date().toLocaleTimeString('pt-BR');
     render();
-    if (showMsg) toast('🔄 Dados atualizados!');
-  } catch(e) {
+    if(showMsg)toast('🔄 Dados atualizados!');
+  }catch(e){
     document.getElementById('sync-dot').classList.add('offline');
-    document.getElementById('last-update').textContent = 'Erro na conexão';
-    if (showMsg) toast('❌ Erro ao atualizar', true);
+    document.getElementById('last-update').textContent='Erro na conexão';
+    if(showMsg)toast('❌ Erro ao atualizar',true);
   }
 }
+function startAutoRefresh(){if(refreshTimer)clearInterval(refreshTimer);refreshTimer=setInterval(()=>{if(editing.size===0)refreshData(false);},5000);}
+function setupRealtime(){sb.channel('colabs').on('postgres_changes',{event:'*',schema:'public',table:'colaboradores'},()=>{if(editing.size===0)refreshData(false);}).subscribe();}
+async function initApp(){await refreshData(false);startAutoRefresh();setupRealtime();}
 
-function startAutoRefresh() {
-  if (refreshTimer) clearInterval(refreshTimer);
-  refreshTimer = setInterval(() => { if (editing.size===0) refreshData(false); }, 5000);
-}
-
-function setupRealtime() {
-  sb.channel('colabs').on('postgres_changes',
-    {event:'*',schema:'public',table:'colaboradores'},
-    () => { if (editing.size===0) refreshData(false); }
-  ).subscribe();
-}
-
-async function initApp() {
-  await refreshData(false);
-  startAutoRefresh();
-  setupRealtime();
-}
-
-// ── RENDER ────────────────────────────────────────
 function initials(n){return n.replace(/\s*\(.*?\)\s*/g,'').trim().split(' ').slice(0,2).map(x=>x[0]||'').join('').toUpperCase();}
-
 function sidebar(){
   let h='<div class="sidebar-section">Times</div>';
-  for(const[k,t] of Object.entries(TEAMS)){
-    const c=emps.filter(e=>e.team===k).length;
-    h+=`<div class="sidebar-item${k===cur?' active':''}" onclick="go('${k}')">
-      <div class="sidebar-dot" style="background:${t.color}"></div>
-      <span>${t.label}</span><span class="sidebar-count">${c}</span></div>`;
-  }
+  for(const[k,t]of Object.entries(TEAMS)){const c=emps.filter(e=>e.team===k).length;h+=`<div class="sidebar-item${k===cur?' active':''}" onclick="go('${k}')"><div class="sidebar-dot" style="background:${t.color}"></div><span>${t.label}</span><span class="sidebar-count">${c}</span></div>`;}
   document.getElementById('sidebar').innerHTML=h;
 }
-
 function renderMain(){
-  const team=TEAMS[cur];
-  const te=emps.filter(e=>e.team===cur);
-  const q=(document.getElementById('globalSearch')?.value||'').toLowerCase();
-  const fe=te.filter(e=>e.name.toLowerCase().includes(q));
+  const team=TEAMS[cur];const te=emps.filter(e=>e.team===cur);const q=(document.getElementById('globalSearch')?.value||'').toLowerCase();const fe=te.filter(e=>e.name.toLowerCase().includes(q));
   const wNb=te.filter(e=>e.nb).length,wCel=te.filter(e=>e.cel).length,wPin=te.filter(e=>e.pin).length;
-  let empty='';
-  if(!fe.length) empty=`<div class="empty-state"><div class="emoji">${cur==='sdr'&&!te.length?'📞':'🔍'}</div>
-    <h3>${cur==='sdr'&&!te.length?'SDR sem colaboradores':'Nenhum resultado'}</h3>
-    <p>${cur==='sdr'&&!te.length?'Adicione o primeiro membro.':'Tente outro termo de busca.'}</p></div>`;
-  document.getElementById('main').innerHTML=`
-    <div class="team-header">
-      <div class="team-badge" style="background:${team.color}"></div>
-      <div class="team-name">${team.icon} ${team.label}</div>
-      <div class="team-count-chip">${te.length} colaboradores</div>
-    </div>
-    <div class="stats-bar">
-      <div class="stat-chip"><div class="stat-num">${te.length}</div><div class="stat-label">Total</div></div>
-      <div class="stat-chip"><div class="stat-num" style="color:var(--accent)">${wNb}</div><div class="stat-label">Notebook</div></div>
-      <div class="stat-chip"><div class="stat-num" style="color:var(--green)">${wCel}</div><div class="stat-label">Celular</div></div>
-      <div class="stat-chip"><div class="stat-num" style="color:var(--yellow)">${wPin}</div><div class="stat-label">PIN</div></div>
-    </div>
-    <div class="grid">${fe.map(card).join('')}${empty}
-      <div class="add-card" onclick="openAddModal()"><span class="plus">+</span><span>Adicionar colaborador</span></div>
-    </div>`;
+  let empty='';if(!fe.length)empty=`<div class="empty-state"><div class="emoji">${cur==='sdr'&&!te.length?'📞':'🔍'}</div><h3>${cur==='sdr'&&!te.length?'SDR sem colaboradores':'Nenhum resultado'}</h3><p>${cur==='sdr'&&!te.length?'Adicione o primeiro membro.':'Tente outro termo de busca.'}</p></div>`;
+  document.getElementById('main').innerHTML=`<div class="team-header"><div class="team-badge" style="background:${team.color}"></div><div class="team-name">${team.icon} ${team.label}</div><div class="team-count-chip">${te.length} colaboradores</div></div><div class="stats-bar"><div class="stat-chip"><div class="stat-num">${te.length}</div><div class="stat-label">Total</div></div><div class="stat-chip"><div class="stat-num" style="color:var(--accent)">${wNb}</div><div class="stat-label">Notebook</div></div><div class="stat-chip"><div class="stat-num" style="color:var(--green)">${wCel}</div><div class="stat-label">Celular</div></div><div class="stat-chip"><div class="stat-num" style="color:var(--yellow)">${wPin}</div><div class="stat-label">PIN</div></div></div><div class="grid">${fe.map(card).join('')}${empty}<div class="add-card" onclick="openAddModal()"><span class="plus">+</span><span>Adicionar colaborador</span></div></div>`;
 }
-
 function card(e){
-  const t=TEAMS[e.team],ed=editing.has(e.id),sh=shown[e.id];
-  const hasX=e.ms||e.wifi||e.obs;
-  function fv(v,mask=true){
-    if(!v)return`<div class="fdisp empty">—</div>`;
-    if(mask&&!sh)return`<div class="fdisp masked">••••••••</div>`;
-    return`<div class="fdisp">${v}</div>`;
-  }
+  const t=TEAMS[e.team],ed=editing.has(e.id),sh=shown[e.id];const hasX=e.ms||e.wifi||e.obs;
+  function fv(v,mask=true){if(!v)return`<div class="fdisp empty">—</div>`;if(mask&&!sh)return`<div class="fdisp masked">••••••••</div>`;return`<div class="fdisp">${v}</div>`;}
   function fi(fid,v){return`<input class="finput" id="${fid}" type="text" value="${(v||'').replace(/"/g,'&quot;')}">`;}
-  return`<div class="emp-card">
-    <div class="card-head">
-      <div class="emp-info">
-        <div class="avatar" style="background:${t.color}20;color:${t.color};border:1px solid ${t.color}40">${initials(e.name)}</div>
-        <div>
-          <div class="emp-name">${e.name}${hasX?`<span class="has-extra">+info</span>`:''}</div>
-          <div class="emp-tag">${t.icon} ${t.label}</div>
-        </div>
-      </div>
-      <button class="icon-btn" onclick="toggleShow(${e.id})">${sh?'🙈':'👁️'}</button>
-    </div>
-    <div class="card-body">
-      ${ed?`
-        <div class="frow"><div class="flbl">💻 Notebook</div><div class="fwrap">${fi('nb-'+e.id,e.nb)}</div></div>
-        <div class="frow"><div class="flbl">📱 Celular</div><div class="fwrap">${fi('cel-'+e.id,e.cel)}</div></div>
-        <div class="frow"><div class="flbl">🔢 PIN</div><div class="fwrap">${fi('pin-'+e.id,e.pin)}</div></div>
-        <div class="frow"><div class="flbl ylw">📧 Microsoft</div><div class="fwrap">${fi('ms-'+e.id,e.ms)}</div></div>
-        <div class="frow"><div class="flbl ylw">📶 Wi-Fi</div><div class="fwrap">${fi('wf-'+e.id,e.wifi)}</div></div>
-        <div class="frow"><div class="flbl ylw">📝 Obs</div><div class="fwrap">${fi('obs-'+e.id,e.obs)}</div></div>
-      `:`
-        <div class="frow"><div class="flbl">💻 Notebook</div><div class="fwrap">${fv(e.nb)}</div></div>
-        <div class="frow"><div class="flbl">📱 Celular</div><div class="fwrap">${fv(e.cel,false)}</div></div>
-        <div class="frow"><div class="flbl">🔢 PIN</div><div class="fwrap">${fv(e.pin)}</div></div>
-        ${hasX?`
-          ${e.ms?`<div class="frow xtra"><div class="flbl ylw">📧 Microsoft</div><div class="fwrap">${fv(e.ms,false)}</div></div>`:''}
-          ${e.wifi?`<div class="frow xtra"><div class="flbl ylw">📶 Wi-Fi</div><div class="fwrap">${fv(e.wifi,false)}</div></div>`:''}
-          ${e.obs?`<div class="frow xtra"><div class="flbl ylw">📝 Obs</div><div class="fwrap">${fv(e.obs,false)}</div></div>`:''}
-        `:''}
-      `}
-    </div>
-    <div class="card-foot">
-      ${ed?`
-        <button class="btn btn-ghost btn-sm" onclick="cancelEdit(${e.id})">Cancelar</button>
-        <button class="btn btn-save btn-sm" onclick="saveCard(${e.id})">💾 Salvar</button>
-      `:`
-        <button class="btn btn-danger btn-sm" onclick="delEmp(${e.id})">🗑️</button>
-        <button class="btn btn-ghost btn-sm" onclick="startEdit(${e.id})">✏️ Editar</button>
-      `}
-    </div>
-  </div>`;
+  return`<div class="emp-card"><div class="card-head"><div class="emp-info"><div class="avatar" style="background:${t.color}20;color:${t.color};border:1px solid ${t.color}40">${initials(e.name)}</div><div><div class="emp-name">${e.name}${hasX?`<span class="has-extra">+info</span>`:''}</div><div class="emp-tag">${t.icon} ${t.label}</div></div></div><button class="icon-btn" onclick="toggleShow(${e.id})">${sh?'🙈':'👁️'}</button></div><div class="card-body">${ed?`<div class="frow"><div class="flbl">💻 Notebook</div><div class="fwrap">${fi('nb-'+e.id,e.nb)}</div></div><div class="frow"><div class="flbl">📱 Celular</div><div class="fwrap">${fi('cel-'+e.id,e.cel)}</div></div><div class="frow"><div class="flbl">🔢 PIN</div><div class="fwrap">${fi('pin-'+e.id,e.pin)}</div></div><div class="frow"><div class="flbl ylw">📧 Microsoft</div><div class="fwrap">${fi('ms-'+e.id,e.ms)}</div></div><div class="frow"><div class="flbl ylw">📶 Wi-Fi</div><div class="fwrap">${fi('wf-'+e.id,e.wifi)}</div></div><div class="frow"><div class="flbl ylw">📝 Obs</div><div class="fwrap">${fi('obs-'+e.id,e.obs)}</div></div>`:`<div class="frow"><div class="flbl">💻 Notebook</div><div class="fwrap">${fv(e.nb)}</div></div><div class="frow"><div class="flbl">📱 Celular</div><div class="fwrap">${fv(e.cel,false)}</div></div><div class="frow"><div class="flbl">🔢 PIN</div><div class="fwrap">${fv(e.pin)}</div></div>${hasX?`${e.ms?`<div class="frow xtra"><div class="flbl ylw">📧 Microsoft</div><div class="fwrap">${fv(e.ms,false)}</div></div>`:''}${e.wifi?`<div class="frow xtra"><div class="flbl ylw">📶 Wi-Fi</div><div class="fwrap">${fv(e.wifi,false)}</div></div>`:''}${e.obs?`<div class="frow xtra"><div class="flbl ylw">📝 Obs</div><div class="fwrap">${fv(e.obs,false)}</div></div>`:''}`:''}` }</div><div class="card-foot">${ed?`<button class="btn btn-ghost btn-sm" onclick="cancelEdit(${e.id})">Cancelar</button><button class="btn btn-save btn-sm" onclick="saveCard(${e.id})">💾 Salvar</button>`:`<button class="btn btn-danger btn-sm" onclick="delEmp(${e.id})">🗑️</button><button class="btn btn-ghost btn-sm" onclick="startEdit(${e.id})">✏️ Editar</button>`}</div></div>`;
 }
-
 function render(){sidebar();renderMain();}
 function go(k){cur=k;editing.clear();render();}
 function startEdit(id){editing.add(id);renderMain();}
@@ -441,71 +279,31 @@ function toggleShow(id){shown[id]=!shown[id];renderMain();}
 
 async function saveCard(id){
   const e=emps.find(x=>x.id===id);if(!e)return;
-  const data={
-    nb:document.getElementById('nb-'+id)?.value||'',
-    cel:document.getElementById('cel-'+id)?.value||'',
-    pin:document.getElementById('pin-'+id)?.value||'',
-    ms:document.getElementById('ms-'+id)?.value||'',
-    wifi:document.getElementById('wf-'+id)?.value||'',
-    obs:document.getElementById('obs-'+id)?.value||'',
-  };
+  const data={nb:document.getElementById('nb-'+id)?.value||'',cel:document.getElementById('cel-'+id)?.value||'',pin:document.getElementById('pin-'+id)?.value||'',ms:document.getElementById('ms-'+id)?.value||'',wifi:document.getElementById('wf-'+id)?.value||'',obs:document.getElementById('obs-'+id)?.value||''};
   toast('💾 Salvando...');
-  try{
-    await dbUpdate(id,data);
-    editing.delete(id);
-    await refreshData(false);
-    toast('✅ Salvo com sucesso!');
-  }catch(err){toast('❌ Erro ao salvar',true);}
+  try{await dbUpdate(id,data);editing.delete(id);await refreshData(false);toast('✅ Salvo!');}
+  catch(err){toast('❌ Erro ao salvar',true);}
 }
-
 async function delEmp(id){
-  if(!confirm('Remover este colaborador?'))return;
+  const e=emps.find(x=>x.id===id);
+  if(!confirm(`Remover "${e?.name}"?\n\nEsta ação não pode ser desfeita.`))return;
   toast('🗑️ Removendo...');
-  try{
-    await dbDelete(id);
-    await refreshData(false);
-    toast('✅ Removido!');
-  }catch(err){toast('❌ Erro ao remover',true);}
+  try{await dbDelete(id);await refreshData(false);toast('✅ Removido!');}
+  catch(err){toast('❌ Erro ao remover',true);}
 }
-
 function openAddModal(){document.getElementById('mTeam').value=cur;document.getElementById('addModal').classList.add('open');}
-function closeModal(){
-  document.getElementById('addModal').classList.remove('open');
-  ['mName','mNb','mCel','mPin','mMs','mWifi','mObs'].forEach(i=>document.getElementById(i).value='');
-}
-
+function closeModal(){document.getElementById('addModal').classList.remove('open');['mName','mNb','mCel','mPin','mMs','mWifi','mObs'].forEach(i=>document.getElementById(i).value='');}
 async function addEmp(){
-  const name=document.getElementById('mName').value.trim();
-  if(!name){alert('Digite o nome.');return;}
+  const name=document.getElementById('mName').value.trim();if(!name){alert('Digite o nome.');return;}
   const maxId=emps.length?Math.max(...emps.map(e=>+e.id)):0;
-  const data={
-    id:maxId+1,name,
-    team:document.getElementById('mTeam').value,
-    nb:document.getElementById('mNb').value.trim(),
-    cel:document.getElementById('mCel').value.trim(),
-    pin:document.getElementById('mPin').value.trim(),
-    ms:document.getElementById('mMs').value.trim(),
-    wifi:document.getElementById('mWifi').value.trim(),
-    obs:document.getElementById('mObs').value.trim(),
-  };
+  const data={id:maxId+1,name,team:document.getElementById('mTeam').value,nb:document.getElementById('mNb').value.trim(),cel:document.getElementById('mCel').value.trim(),pin:document.getElementById('mPin').value.trim(),ms:document.getElementById('mMs').value.trim(),wifi:document.getElementById('mWifi').value.trim(),obs:document.getElementById('mObs').value.trim()};
   toast('💾 Salvando...');
-  try{
-    await dbInsert(data);
-    cur=data.team;closeModal();
-    await refreshData(false);
-    toast('✅ Colaborador adicionado!');
-  }catch(err){toast('❌ Erro ao adicionar',true);}
+  try{await dbInsert(data);cur=data.team;closeModal();await refreshData(false);toast('✅ Colaborador adicionado!');}
+  catch(err){toast('❌ Erro ao adicionar',true);}
 }
-
-function toast(msg,isErr=false){
-  const t=document.getElementById('toast');
-  t.textContent=msg;
-  t.className='toast show'+(isErr?' error':'');
-  clearTimeout(t._timer);
-  t._timer=setTimeout(()=>t.className='toast',3000);
-}
-
+function toast(msg,isErr=false){const t=document.getElementById('toast');t.textContent=msg;t.className='toast show'+(isErr?' error':'');clearTimeout(t._timer);t._timer=setTimeout(()=>t.className='toast',3000);}
 document.getElementById('addModal').addEventListener('click',function(e){if(e.target===this)closeModal();});
+boot();
 </script>
 </body>
 </html>
